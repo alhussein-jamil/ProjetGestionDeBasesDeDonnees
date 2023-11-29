@@ -1,5 +1,5 @@
-- Table: caracteristiques
--------------------------
+- Table: caracteristiques  | nb row = 55298 (55302 real rows)
+-------------------------------------------------------------
 Accident_Id bigint 
 jour bigint 
 mois bigint 
@@ -16,8 +16,8 @@ adr text
 lat decimal(30,25) 
 long decimal(30,25)
 
-- Table: lieux
--------------------------
+- Table: lieux   | nb row = 55269 (55302 real rows)
+---------------------------------------------------
 Num_Acc bigint 
 catr int 
 voie text 
@@ -38,8 +38,8 @@ situ int
 vma int
 
 
-- Table: usagers
--------------------------
+- Table: usagers | nb row = 123391 (126662 real rows)
+-----------------------------------------------------
 Num_Acc bigint 
 id_usager text 
 id_vehicule text 
@@ -57,8 +57,8 @@ locp double
 actp double 
 etatp double
 
-- Table: vehicules
---------------------
+- Table: vehicules | nb row = 94493 (94493 real rows)
+-----------------------------------------------------
 Num_Acc bigint 
 id_vehicule text 
 num_veh text 
