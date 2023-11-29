@@ -137,8 +137,7 @@
 07 – VL seul
 08 – Référence inutilisée depuis 2006 (VL + caravane)
 09 – Référence inutilisée depuis 2006 (VL + remorque)
-10 – VU seul 1,5T <= PTAC <= 3,5T avec ou sans remorque (anciennement VU seul 1,5T <= PTAC
-<= 3,5T)
+10 – VU seul 1,5T <= PTAC <= 3,5T avec ou sans remorque (anciennement VU seul 1,5T <= PTAC <= 3,5T)
 11 – Référence inutilisée depuis 2006 (VU (10) + caravane)
 12 – Référence inutilisée depuis 2006 (VU (10) + remorque)
 13 – PL seul 3,5T <PTCA <= 7,5T

@@ -1,0 +1,12 @@
+id;signification
+-1;Non renseigné
+0;Aucun
+1;Avant
+2;Avant droit
+3;Avant gauche
+4;Arrière
+5;Arrière droit
+6;Arrière gauche
+7;Côté droit
+8;Côté gauche
+9;Chocs multiples (tonneaux)
