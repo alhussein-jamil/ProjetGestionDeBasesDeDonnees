@@ -1,0 +1,72 @@
+- Table: caracteristiques
+-------------------------
+Accident_Id bigint 
+jour bigint 
+mois bigint 
+an bigint 
+hrmn time 
+lum int 
+dep text 
+com text 
+agg int 
+int int 
+atm int 
+col int 
+adr text 
+lat decimal(30,25) 
+long decimal(30,25)
+
+- Table: lieux
+-------------------------
+Num_Acc bigint 
+catr int 
+voie text 
+v1 text 
+v2 text 
+circ double 
+nbv int 
+vosp int 
+prof int 
+pr text 
+pr1 text 
+plan int 
+lartpc text 
+larrout double 
+surf int 
+infra int 
+situ int 
+vma int
+
+
+- Table: usagers
+-------------------------
+Num_Acc bigint 
+id_usager text 
+id_vehicule text 
+num_veh text 
+place int 
+catu int 
+grav int 
+sexe double 
+n_nis year 
+trajet double 
+secu1 double 
+secu2 double 
+secu3 double 
+locp double 
+actp double 
+etatp double
+
+- Table: vehicules
+--------------------
+Num_Acc bigint 
+id_vehicule text 
+num_veh text 
+senc int 
+catv int 
+obs bigint 
+obsm int 
+choc int 
+manv int 
+motor int 
+occutc text
