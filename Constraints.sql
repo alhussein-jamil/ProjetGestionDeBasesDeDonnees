@@ -177,7 +177,11 @@ FOREIGN KEY (col)
 REFERENCES collision(id)
 ON DELETE CASCADE;
 
-
+ALTER TABLE caracteristiques
+ADD CONSTRAINT fk_caracteristiques_lieux
+FOREIGN KEY (Accident_Id)
+REFERENCES lieux(Num_Acc)
+ON DELETE CASCADE;
 
 -- Add foreign key constraints to reference other tables
 ALTER TABLE usagers
@@ -263,6 +267,13 @@ FOREIGN KEY (manv)
 REFERENCES manoeuvre_principale_avant_accident_(id)
 ON DELETE CASCADE;
 
+ALTER TABLE vehicules
+ADD CONSTRAINT fk_vehicules_lieux
+FOREIGN KEY (Num_Acc)
+REFERENCES lieux(Num_Acc);
+
+
+
 ALTER TABLE usagers
 ADD CONSTRAINT fk_usagers_catu
 FOREIGN KEY (catu)
@@ -293,6 +304,12 @@ FOREIGN KEY (etatp)
 REFERENCES etatp(id)
 ON DELETE CASCADE;
 
+ALTER TABLE usagers
+ADD CONSTRAINT fk_usagers_lieux
+FOREIGN KEY (Num_Acc)
+REFERENCES lieux(Num_Acc);
+
+
 ALTER TABLE lieux
 ADD CONSTRAINT fk_lieux_categorie_de_route
 FOREIGN KEY (catr)
@@ -309,7 +326,7 @@ ON DELETE CASCADE;
 ALTER TABLE lieux
 ADD CONSTRAINT fk_lieux_vosp
 FOREIGN KEY (vosp)
-REFERENCES regime_de_circulation(id)
+REFERENCES vosp(id)
 ON DELETE CASCADE;
 
 ALTER TABLE lieux
