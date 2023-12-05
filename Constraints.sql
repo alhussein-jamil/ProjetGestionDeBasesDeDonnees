@@ -44,9 +44,6 @@ ADD CONSTRAINT pk_conditions_atmospheriques PRIMARY KEY (id);
 ALTER TABLE etat_de_la_surface_
 ADD CONSTRAINT pk_etat_de_la_surface_ PRIMARY KEY (id);
 
--- Table: extratables
-ALTER TABLE extratables
-ADD CONSTRAINT pk_extratables PRIMARY KEY (id);
 
 -- Table: gravite
 ALTER TABLE gravite
@@ -267,14 +264,14 @@ REFERENCES manoeuvre_principale_avant_accident_(id)
 ON DELETE CASCADE;
 
 ALTER TABLE usagers
-ADD CONSTRAINT fk_usagers_ctu
-FOREIGN KEY (ctu)
+ADD CONSTRAINT fk_usagers_catu
+FOREIGN KEY (catu)
 REFERENCES categorie_usager(id)
 ON DELETE CASCADE;
 
 ALTER TABLE usagers
 ADD CONSTRAINT fk_usagers_gravite
-FOREIGN KEY (grv)
+FOREIGN KEY (grav)
 REFERENCES gravite(id)
 ON DELETE CASCADE;
 
@@ -286,13 +283,13 @@ ON DELETE CASCADE;
 
 ALTER TABLE usagers
 ADD CONSTRAINT fk_usagers_action_du_pieton
-FOREIGN KEY (ctp)
+FOREIGN KEY (actp)
 REFERENCES action_du_pieton(id)
 ON DELETE CASCADE;
 
 ALTER TABLE usagers
 ADD CONSTRAINT fk_usagers_etatp
-FOREIGN KEY (ettp)
+FOREIGN KEY (etatp)
 REFERENCES etatp(id)
 ON DELETE CASCADE;
 
