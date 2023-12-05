@@ -100,6 +100,11 @@ ADD CONSTRAINT pk_point_choc_initial_ PRIMARY KEY (id);
 ALTER TABLE prof
 ADD CONSTRAINT pk_prof PRIMARY KEY (id);
 
+-- Table: etatp
+ALTER TABLE etatp
+ADD CONSTRAINT pk_etatp PRIMARY KEY (id);
+
+
 -- Table: regime_de_circulation
 ALTER TABLE regime_de_circulation
 ADD CONSTRAINT pk_regime_de_circulation PRIMARY KEY (id);
@@ -231,7 +236,6 @@ FOREIGN KEY (choc)
 REFERENCES point_choc_initial_(id)
 ON DELETE CASCADE;
 
-
 ALTER TABLE vehicules
 ADD CONSTRAINT fk_vehicules_obstacle_fixe_heurte
 FOREIGN KEY (obs)
@@ -250,16 +254,96 @@ FOREIGN KEY (catv)
 REFERENCES categorie_du_vehicule (id)
 ON DELETE CASCADE;
 
-
-
-
 ALTER TABLE vehicules
 ADD CONSTRAINT fk_vehicules_obstacle_fixe_heurte
 FOREIGN KEY (obs)
 REFERENCES obstacle_fixe_heurte (id)
 ON DELETE CASCADE;
 
+ALTER TABLE vehicules
+ADD CONSTRAINT fk_vehicules_obstacle_fixe_manoeuvre
+FOREIGN KEY (manv)
+REFERENCES manoeuvre_principale_avant_accident_(id)
+ON DELETE CASCADE;
 
+ALTER TABLE usagers
+ADD CONSTRAINT fk_usagers_ctu
+FOREIGN KEY (ctu)
+REFERENCES categorie_usager(id)
+ON DELETE CASCADE;
+
+ALTER TABLE usagers
+ADD CONSTRAINT fk_usagers_gravite
+FOREIGN KEY (grv)
+REFERENCES gravite(id)
+ON DELETE CASCADE;
+
+ALTER TABLE usagers
+ADD CONSTRAINT fk_usagers_locp
+FOREIGN KEY (locp)
+REFERENCES locp(id)
+ON DELETE CASCADE;
+
+ALTER TABLE usagers
+ADD CONSTRAINT fk_usagers_action_du_pieton
+FOREIGN KEY (ctp)
+REFERENCES action_du_pieton(id)
+ON DELETE CASCADE;
+
+ALTER TABLE usagers
+ADD CONSTRAINT fk_usagers_etatp
+FOREIGN KEY (ettp)
+REFERENCES etatp(id)
+ON DELETE CASCADE;
+
+ALTER TABLE lieux
+ADD CONSTRAINT fk_lieux_categorie_de_route
+FOREIGN KEY (catr)
+REFERENCES categorie_de_route(id)
+ON DELETE CASCADE;
+
+
+ALTER TABLE lieux
+ADD CONSTRAINT fk_lieux_regime_de_circulation
+FOREIGN KEY (circ)
+REFERENCES regime_de_circulation(id)
+ON DELETE CASCADE;
+
+ALTER TABLE lieux
+ADD CONSTRAINT fk_lieux_vosp
+FOREIGN KEY (vosp)
+REFERENCES regime_de_circulation(id)
+ON DELETE CASCADE;
+
+ALTER TABLE lieux
+ADD CONSTRAINT fk_lieux_prof 
+FOREIGN KEY (prof)
+REFERENCES prof(id)
+ON DELETE CASCADE;
+
+ALTER TABLE lieux
+ADD CONSTRAINT fk_lieux_trace_en_plan
+FOREIGN KEY (plan)
+REFERENCES trace_en_plan(id)
+ON DELETE CASCADE;
+
+ALTER TABLE lieux
+ADD CONSTRAINT fk_lieux_etat_de_la_surface
+FOREIGN KEY (surf)
+REFERENCES etat_de_la_surface_(id)
+ON DELETE CASCADE;
+
+ALTER TABLE lieux
+ADD CONSTRAINT fk_lieux_infrastructure
+FOREIGN KEY (infra)
+REFERENCES infrastructure(id)
+ON DELETE CASCADE;
+
+ALTER TABLE lieux
+ADD CONSTRAINT fk_lieux_situation_accident
+FOREIGN KEY (situ)
+REFERENCES situation_accident(id)
+ON DELETE CASCADE;
 
 commit;
 ROLLBACK ;
