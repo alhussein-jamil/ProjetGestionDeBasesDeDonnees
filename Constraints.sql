@@ -179,8 +179,28 @@ FOREIGN KEY (col)
 REFERENCES collision(id_collision)
 ON DELETE CASCADE;
 
+-- *****
+-- caracteristiques -> lieux
+ALTER TABLE caracteristiques
+ADD CONSTRAINT fk_caracteristiques_lieux
+FOREIGN KEY (Accident_Id)
+REFERENCES lieux(Num_Acc)
+ON DELETE CASCADE;
+-- *****
 -- ---------------------------------------------------------------------------
 -- usagers : Add foreign key constraint 
+
+ALTER TABLE usagers
+ADD CONSTRAINT fk_usagers_catu
+FOREIGN KEY (catu)
+REFERENCES categorie_usager(id_categorie_usager)
+ON DELETE CASCADE;
+
+ALTER TABLE usagers
+ADD CONSTRAINT fk_usagers_gravite
+FOREIGN KEY (grav)
+REFERENCES gravite(id_gravite)
+ON DELETE CASCADE;
 
 ALTER TABLE usagers
 ADD CONSTRAINT fk_usagers_sexe
@@ -189,9 +209,9 @@ REFERENCES sexe (id_sexe)
 ON DELETE CASCADE;
 
 ALTER TABLE usagers
-ADD CONSTRAINT fk_usagers_vehicules
-FOREIGN KEY (id_vehicule)
-REFERENCES type_motorisation (id_type_motorisation )
+ADD CONSTRAINT fk_usagers_motif_deplacement
+FOREIGN KEY (trajet)
+REFERENCES motif_deplacement(id_motif_deplacement)
 ON DELETE CASCADE;
 
 ALTER TABLE usagers
@@ -212,11 +232,6 @@ FOREIGN KEY (secu3)
 REFERENCES secu3 (id_secu3)
 ON DELETE CASCADE;
 
-ALTER TABLE usagers
-ADD CONSTRAINT fk_usagers_gravite
-FOREIGN KEY (grav)
-REFERENCES gravite(id_gravite)
-ON DELETE CASCADE;
 
 ALTER TABLE usagers
 ADD CONSTRAINT fk_usagers_locp
@@ -236,23 +251,27 @@ FOREIGN KEY (etatp)
 REFERENCES etatp(id_etatp)
 ON DELETE CASCADE;
 
-ALTER TABLE usagers
-ADD CONSTRAINT fk_usagers_motif_deplacement
-FOREIGN KEY (trajet)
-REFERENCES motif_deplacement(id_motif_deplacement)
-ON DELETE CASCADE;
-
-ALTER TABLE usagers
-ADD CONSTRAINT fk_usagers_catu
-FOREIGN KEY (catu)
-REFERENCES categorie_usager(id_categorie_usager)
-ON DELETE CASCADE;
-
+-- *****
+-- usager -> caracteristiques
 ALTER TABLE usagers
 ADD CONSTRAINT fk_usagers_caracteristiques
 FOREIGN KEY (Num_Acc)
-REFERENCES etatp(Accident_Id)
+REFERENCES caracteristiques(Accident_Id)
 ON DELETE CASCADE;
+
+-- usager -> lieux
+ALTER TABLE usagers
+ADD CONSTRAINT fk_usagers_lieux
+FOREIGN KEY (Num_Acc)
+REFERENCES lieux(Num_Acc);
+
+-- usager -> vehicules
+ALTER TABLE usagers
+ADD CONSTRAINT fk_usagers_vehicules
+FOREIGN KEY (id_vehicule)
+REFERENCES vehicules(id_vehicule);
+-- *****
+
 -- ---------------------------------------------------------------------------
 -- vehicules : Add foreign key constraint 
 
@@ -298,13 +317,21 @@ FOREIGN KEY (manv)
 REFERENCES manoeuvre_principale_avant_accident_(id_manoeuvre_principale_avant_accident_)
 ON DELETE CASCADE;
 
+-- *****
 ALTER TABLE vehicules
 ADD CONSTRAINT fk_vehicules_lieux
 FOREIGN KEY (Num_Acc)
 REFERENCES lieux(Num_Acc);
 
+ALTER TABLE vehicules
+ADD CONSTRAINT fk_vehicules_caracteristiques
+FOREIGN KEY (Num_Acc)
+REFERENCES caracteristiques(Accident_Id)
+ON DELETE CASCADE;
+-- *****
+
 -- ---------------------------------------------------------------------------
--- vehicules : Add foreign key constraint 
+-- lieux : Add foreign key constraint 
 
 ALTER TABLE lieux
 ADD CONSTRAINT fk_lieux_categorie_de_route
@@ -353,6 +380,15 @@ ADD CONSTRAINT fk_lieux_situation_accident
 FOREIGN KEY (situ)
 REFERENCES situation_accident(id_id_situation_accident)
 ON DELETE CASCADE;
+
+-- *****
+-- lieux -> caracteristiques
+ALTER TABLE lieux
+ADD CONSTRAINT fk_lieux_caracteristiques
+FOREIGN KEY (Num_Acc)
+REFERENCES caracteristiques(Accident_Id)
+ON DELETE CASCADE;
+-- *****
 
 commit;
 ROLLBACK ;
