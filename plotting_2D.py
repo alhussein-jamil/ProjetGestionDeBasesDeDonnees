@@ -40,7 +40,7 @@ with open('Queries.sql') as f:
             i += 1
             queries.append('')
 
-# Query 1: Investigate the types of manoeuvres performed by vehicles before accidents and their impact on collision outcomes.
+# Query 1: Retrieve information about accidents involving pedestrians, including their characteristics and the type of vehicle involved
 query1 = queries[0]
 df_query1 = execute_query(query1)
 
@@ -112,40 +112,33 @@ fig.show()
 query9 = queries[8]
 df_query9 = execute_query(query9)
 # Plot for Query 9
-fig = px.bar(df_query9, x='sexe', y='Average Safety Equipment Used', title='Average Safety Equipment Usage by Gender')
-fig.show()
-
-# Query 10: Analyze the age and gender (sexe) distribution of individuals involved in accidents and determine if there are age or gender-specific patterns. Safety Equipment Usage:
-query10 = queries[9]
-df_query10 = execute_query(query10)
-# Plot for Query 10
-fig = px.bar(df_query10, x='Gender', y='Average Equipment Use Score', title='Average Equipment Use Score by Gender')
+fig = px.bar(df_query9, x='Gender', y='Average Equipment Use Score', title='Average Equipment Use Score by Gender')
 fig.show()
 
 # Probleme de query 
-# Query 11: Explore the usage of safety equipment (secu1, secu2, secu3) and its correlation with injury severity. Driver Analysis:
-query11 = queries[10]
-df_query11 = execute_query(query11)
-# Plot for Query 11
-fig = px.bar(df_query11, x=['SafetyEquipment1', 'SafetyEquipment2', 'SafetyEquipment3'], y='TotalAccidents', color='InjurySeverity', title='Safety Equipment Usage and Injury Severity')
+# Query 10: Explore the usage of safety equipment (secu1, secu2, secu3) and its correlation with injury severity. Driver Analysis:
+query10 = queries[9]
+df_query10 = execute_query(query10)
+# Plot for Query 10
+fig = px.bar(df_query10, x=['SafetyEquipment1', 'SafetyEquipment2', 'SafetyEquipment3'], y='TotalAccidents', color='InjurySeverity', title='Safety Equipment Usage and Injury Severity')
 fig.show()
 
-# Query 12: Focus on pedestrian-related data (catu=3) to understand the locations (locp) and actions (actp) leading to pedestrian accidents. Vehicle Manoeuvres:
+# Query 11: Focus on pedestrian-related data (catu=3) to understand the locations (locp) and actions (actp) leading to pedestrian accidents. Vehicle Manoeuvres:
+query11 = queries[10]
+df_query11 = execute_query(query11)
+# Plot for Query 12
+fig = px.bar(df_query11, x='PedestrianLocation', y='TotalPedestrianAccidents', color='PedestrianAction', title='Pedestrian Accidents')
+fig.show()
+
+
+# Query 12 Investigate the types of manoeuvres performed by vehicles before accidents and their impact on collision outcomes.
 query12 = queries[11]
 df_query12 = execute_query(query12)
 # Plot for Query 12
-fig = px.bar(df_query12, x='PedestrianLocation', y='TotalPedestrianAccidents', color='PedestrianAction', title='Pedestrian Accidents')
-fig.show()
-
-
-# Query 14: Investigate the types of manoeuvres performed by vehicles before accidents and their impact on collision outcomes.
-query14 = queries[13]
-df_query14 = execute_query(query14)
-# Plot for Query 14
 fig = go.Figure(data=[
-    go.Bar(name='Fatal Accidents', x=df_query14['ManeuverType'], y=df_query14['FatalAccidents']),
-    go.Bar(name='Hospitalized Accidents', x=df_query14['ManeuverType'], y=df_query14['HospitalizedAccidents']),
-    go.Bar(name='Light Injury Accidents', x=df_query14['ManeuverType'], y=df_query14['LightInjuryAccidents'])
+    go.Bar(name='Fatal Accidents', x=df_query12['ManeuverType'], y=df_query12['FatalAccidents']),
+    go.Bar(name='Hospitalized Accidents', x=df_query12['ManeuverType'], y=df_query12['HospitalizedAccidents']),
+    go.Bar(name='Light Injury Accidents', x=df_query12['ManeuverType'], y=df_query12['LightInjuryAccidents'])
 ])
 
 fig.update_layout(barmode='stack', title='Manoeuvre Types and Accident Outcomes')

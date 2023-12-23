@@ -114,21 +114,8 @@ JOIN
     collision ON collision.id_collision = col
 GROUP BY
     collision;
-    
 
--- Query 9: Analyze the age and gender (sexe) distribution of individuals involved in accidents and determine if there are age or gender-specific patterns. Safety Equipment Usage:
--- This query needs to check the average sum of equipements used by each individual by each sex.
-SELECT 
-    sexe.sexe,
-    AVG(usagers.secu1 + usagers.secu2 + usagers.secu3) AS 'Average Safety Equipment Used'
-FROM
-    usagers
-JOIN
-    sexe ON sexe.id_sexe = usagers.sexe
-GROUP BY
-    sexe.sexe;
-
- -- Query 10: Analyze the age and gender (sexe) distribution of individuals involved in accidents and determine if there are age or gender-specific patterns. Safety Equipment Usage:
+ -- Query 9: Analyze the age and gender (sexe) distribution of individuals involved in accidents and determine if there are age or gender-specific patterns. Safety Equipment Usage:
 SELECT 
     sexe.sexe as Gender,
     AVG(usagers.secu1 + usagers.secu2 + usagers.secu3) AS 'Average Equipment Use Score'
@@ -141,7 +128,7 @@ WHERE
 GROUP BY 
     sexe.sexe;
 
- -- Query 11: Explore the usage of safety equipment (secu1, secu2, secu3) and its correlation with injury severity. Driver Analysis:
+ -- Query 10: Explore the usage of safety equipment (secu1, secu2, secu3) and its correlation with injury severity. Driver Analysis:
 SELECT
     secu1.secu1 AS SafetyEquipment1,
     secu2.secu2 AS SafetyEquipment2,
@@ -161,11 +148,9 @@ JOIN
 WHERE
     u.catu = 1 -- Filtering for driver
 GROUP BY
-    u.secu1, u.secu2, u.secu3, u.grav 
-ORDER BY
-    TotalAccidents DESC;
+    u.secu1, u.secu2, u.secu3, u.grav;
 
- -- Query 12: Focus on pedestrian-related data (catu=3) to understand the locations (locp) and actions (actp) leading to pedestrian accidents. Vehicle Manoeuvres:
+ -- Query 11: Focus on pedestrian-related data (catu=3) to understand the locations (locp) and actions (actp) leading to pedestrian accidents. Vehicle Manoeuvres:
 SELECT
     locp.locp AS PedestrianLocation,
     action_du_pieton AS PedestrianAction,
@@ -179,11 +164,9 @@ JOIN
 WHERE
     u.catu = 3 -- Filtering for pedestrians
 GROUP BY
-    u.locp, u.actp
-ORDER BY
-    TotalPedestrianAccidents DESC;
+    u.locp, u.actp;
 
- -- Query 13: Investigate the types of manoeuvres performed by vehicles before accidents and their impact on collision outcomes.
+ -- Query 12: Investigate the types of manoeuvres performed by vehicles before accidents and their impact on collision outcomes.
 SELECT
     m.manoeuvre_principale_avant_accident_ AS ManeuverType,
     COUNT(*) AS TotalAccidents,
