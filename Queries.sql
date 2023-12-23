@@ -55,17 +55,16 @@ FROM (
         catr
 ) AS T;
 
--- Query 4: Identify the top 5 locations (lieux) with the highest number of accidents.
+-- Query 4: List the different types of motorizations (type_motorisation) and the count of accidents for each type.
 SELECT 
-    voie, v1, v2,
+    type_motorisation.type_motorisation,
     COUNT(*) AS 'Accident Count'
 FROM 
-    lieux
+    type_motorisation
+JOIN 
+    vehicules ON type_motorisation.id_type_motorisation = vehicules.motor
 GROUP BY 
-    voie, v1, v2
-ORDER BY 
-    COUNT(*) DESC
-LIMIT 5;
+    type_motorisation.type_motorisation;
 
 -- Query 5: List the different types of motorizations (type_motorisation) and the count of accidents for each type.
 SELECT 
@@ -78,18 +77,7 @@ JOIN
 GROUP BY 
     type_motorisation.type_motorisation;
 
--- Query 6: List the different types of motorizations (type_motorisation) and the count of accidents for each type.
-SELECT 
-    type_motorisation.type_motorisation,
-    COUNT(*) AS 'Accident Count'
-FROM 
-    type_motorisation
-JOIN 
-    vehicules ON type_motorisation.id_type_motorisation = vehicules.motor
-GROUP BY 
-    type_motorisation.type_motorisation;
-
--- Query 7: Retrieve the distribution of accidents across different categories such as time of day (lum), weather conditions (atm), and road types (catr).
+-- Query 6: Retrieve the distribution of accidents across different categories such as time of day (lum), weather conditions (atm), and road types (catr).
 SELECT 
     conditions_atmospheriques.conditions_atmospheriques,
     categorie_de_route.categorie_de_route,
@@ -113,10 +101,10 @@ GROUP BY
 ORDER BY 
     accident_count DESC;
 
--- Query 8: Analyze the severity of accidents by looking at the number of fatalities, injuries, and the types of vehicles involved.
+-- Query 7: Analyze the severity of accidents by looking at the number of fatalities, injuries, and the types of vehicles involved.
 SELECT gravite, COUNT(*) as severity_count FROM gravite JOIN usagers ON grav = id_gravite GROUP BY grav;
 
--- Query 9: Explore the involvement of different vehicle categories (catv) in accidents and analyze their contribution to overall road safety.
+-- Query 8: Explore the involvement of different vehicle categories (catv) in accidents and analyze their contribution to overall road safety.
 SELECT 
     categorie_du_vehicule,
     COUNT(*) as accident_count
@@ -127,7 +115,7 @@ JOIN
 GROUP BY 
     categorie_du_vehicule;
 
--- Query 10: Examine the types of collisions (col) that occur most frequently. Determine if certain collision types are associated with higher injury rates.
+-- Query 9: Examine the types of collisions (col) that occur most frequently. Determine if certain collision types are associated with higher injury rates.
 SELECT 
     collision.collision AS 'Collision Type',
     COUNT(*) as 'Total Accident'
@@ -139,7 +127,7 @@ GROUP BY
     collision;
     
 
--- Query 11: Analyze the age and gender (sexe) distribution of individuals involved in accidents and determine if there are age or gender-specific patterns. Safety Equipment Usage:
+-- Query 10: Analyze the age and gender (sexe) distribution of individuals involved in accidents and determine if there are age or gender-specific patterns. Safety Equipment Usage:
 -- This query needs to check the average sum of equipements used by each individual by each sex.
 SELECT 
     sexe.sexe,
@@ -151,7 +139,7 @@ JOIN
 GROUP BY
     sexe.sexe;
 
- -- Query 12: Analyze the age and gender (sexe) distribution of individuals involved in accidents and determine if there are age or gender-specific patterns. Safety Equipment Usage:
+ -- Query 11: Analyze the age and gender (sexe) distribution of individuals involved in accidents and determine if there are age or gender-specific patterns. Safety Equipment Usage:
 SELECT 
     sexe.sexe as Gender,
     AVG(usagers.secu1 + usagers.secu2 + usagers.secu3) AS 'Average Equipment Use Score'
