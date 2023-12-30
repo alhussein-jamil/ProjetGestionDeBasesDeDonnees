@@ -1,9 +1,5 @@
 USE accidentsroutiers;
 
--- INSERT INTO accidentsroutiers.categorie_du_vehicule
--- VALUES
--- ('-1', 'unconnue');
-
 -- Query_3D 1: Retrieve information about accidents involving pedestrians, including their characteristics and the type of vehicle involved
 -- title='Accident Severity by Month and Vehicle Category'
 SELECT 
@@ -144,9 +140,9 @@ GROUP BY
 SELECT
     secu1.secu1 AS "Safety Equipment 1",
     secu2.secu2 AS "Safety Equipment 2",
-    secu3.secu3 AS "Safety Equipment 3",
-    gravite.gravite AS "Severity",
-    COUNT(*) AS "Total Accidents"
+    COUNT(*) AS "Total Accidents",
+    gravite.gravite AS "Severity"
+
 FROM
     Usagers u
 JOIN 
