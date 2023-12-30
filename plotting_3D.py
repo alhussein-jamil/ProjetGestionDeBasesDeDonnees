@@ -1,18 +1,15 @@
-import mysql.connector
-import plotly.express as px
-import pandas as pd
-from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
+import tkinter as tk
 from collections import defaultdict
+from tkinter import ttk
 
 import matplotlib.pyplot as plt
+import mysql.connector
+import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as plt
+import plotly.express as px
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import tkinter as tk
-from tkinter import ttk
+from mpl_toolkits.mplot3d import Axes3D
+
 
 def create_tabbed_panel(figures):
     root = tk.Tk()
@@ -39,15 +36,25 @@ def create_tabbed_panel(figures):
     root.mainloop()
 
 
-def plot3d(df: pd.DataFrame, x: str, y: str, z: str, title: str, x_label: str, y_label: str, z_label: str, x_continuous: bool = True, y_continuous: bool = True, z_continuous: bool = True):
-
+def plot3d(
+    df: pd.DataFrame,
+    x: str,
+    y: str,
+    z: str,
+    title: str,
+    x_label: str,
+    y_label: str,
+    z_label: str,
+    x_continuous: bool = True,
+    y_continuous: bool = True,
+    z_continuous: bool = True,
+):
     if not x_continuous:
         df[x] = pd.Categorical(df[x])
     else:
         # make into buckets
         df[x] = pd.cut(df[x], 10)
         df[x] = pd.Categorical(df[x])
-
 
     if not y_continuous:
         df[y] = pd.Categorical(df[y])
@@ -70,9 +77,9 @@ def plot3d(df: pd.DataFrame, x: str, y: str, z: str, title: str, x_label: str, y
     x_categories = list(df[x].cat.categories)
     y_categories = list(df[y].cat.categories)
 
-    df[z] = df[z].cat.codes if df[z].dtype == 'category' else df[z]
-    df[x] = df[x].cat.codes if df[x].dtype == 'category' else df[x]
-    df[y] = df[y].cat.codes if df[y].dtype == 'category' else df[y]
+    df[z] = df[z].cat.codes if df[z].dtype == "category" else df[z]
+    df[x] = df[x].cat.codes if df[x].dtype == "category" else df[x]
+    df[y] = df[y].cat.codes if df[y].dtype == "category" else df[y]
 
     # Combine z values for duplicate (x, y) pairs
     data_dict = defaultdict(float)
@@ -85,14 +92,23 @@ def plot3d(df: pd.DataFrame, x: str, y: str, z: str, title: str, x_label: str, y
 
     # Create a 3D axis
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    ax = fig.add_subplot(111, projection="3d")
 
     # Use bar3d to create 3D bars
-    ax.bar3d(x_combined, y_combined, [0] * len(z_combined), 0.8, 0.8, z_combined, shade=True,color = 'blue')
+    ax.bar3d(
+        x_combined,
+        y_combined,
+        [0] * len(z_combined),
+        0.8,
+        0.8,
+        z_combined,
+        shade=True,
+        color="blue",
+    )
 
     # Set labels for the axes
-    ax.set_xlabel(x_label, ha='right')
-    ax.set_ylabel(y_label, ha='left')
+    ax.set_xlabel(x_label, ha="right")
+    ax.set_ylabel(y_label, ha="left")
     ax.set_zlabel(z_label)
     # Set tick labels for x and y axes
     ax.set_xticks(range(len(x_categories)))
@@ -105,17 +121,20 @@ def plot3d(df: pd.DataFrame, x: str, y: str, z: str, title: str, x_label: str, y
 
     return fig
 
+
 # Replace these with your MySQL database credentials
 db_config = {
-    'host': 'localhost',
-    'user': 'CyberTitan',
-    'password': '19216811',
-    'database': 'accidentsroutiers',
+    "host": "localhost",
+    "user": "CyberTitan",
+    "password": "19216811",
+    "database": "accidentsroutiers",
 }
+
 
 # Function to connect to the MySQL database
 def connect_to_db():
     return mysql.connector.connect(**db_config)
+
 
 # Function to execute a query and return a DataFrame
 def execute_query(query):
@@ -124,21 +143,19 @@ def execute_query(query):
     connection.close()
     return df
 
-quereys = [''
-]
-titles =[
 
-]
-plot_3D= [
-
-]
-    #ignore comments starting with -- and each query starts with SELECT and ends with ; annd can be on multiple lines
-with open('Queries.sql') as f:
+quereys = [""]
+titles = []
+plot_3D = []
+# ignore comments starting with -- and each query starts with SELECT and ends with ; annd can be on multiple lines
+with open("Queries.sql") as f:
     i = 0
     for line in f:
         if "--" in line or "USE" in line:
             if "title" in line:
-                titles.append(line.split("title")[1].split("=")[1].strip().replace("'", ""))
+                titles.append(
+                    line.split("title")[1].split("=")[1].strip().replace("'", "")
+                )
                 print(titles[-1])
             else:
                 if "Query" in line:
@@ -149,24 +166,35 @@ with open('Queries.sql') as f:
                         plot_3D.append(False)
             continue
         quereys[i] += line
-        if line.endswith(';\n'):
+        if line.endswith(";\n"):
             i += 1
-            quereys.append('')
+            quereys.append("")
 
 
 def plot_query(df_query, title, plot_3D):
     columns = df_query.columns
     breakpoint()
-    if plot_3D: 
+    if plot_3D:
         figs = []
-        for i in range(len(columns)-2): 
+        for i in range(len(columns) - 2):
             figs.append(
-                plot3d(df_query, columns[0], columns[-2], columns[-1], title, columns[0], columns[-2], columns[-1], False, False, False)
+                plot3d(
+                    df_query,
+                    columns[0],
+                    columns[-2],
+                    columns[-1],
+                    title,
+                    columns[0],
+                    columns[-2],
+                    columns[-1],
+                    False,
+                    False,
+                    False,
+                )
             )
         create_tabbed_panel(figs)
     else:
         ...
-    
 
 
 figs = []
@@ -199,7 +227,6 @@ df_quereys = []
 # }
 # fig = plot3d(pd.DataFrame(data), 'Month', 'HospitalizedAccidents', 'FatalAccidents', 'Accident Severity by Month and Vehicle Category', 'Months', 'Vehicle Category', 'Severity', True, True, True)
 # breakpoint()
-
 
 
 # sample_categorical_df = pd.DataFrame(listing)
@@ -254,7 +281,6 @@ df_quereys = []
 # #print column name
 # fig = plot3d(df_query, 'Month', 'Vehicle Category', 'Severity', 'Accident Severity by Month and Vehicle Category', 'Months', 'Vehicle Category', 'Severity', False, False, False)
 # figs.append(fig)
-
 
 
 #
@@ -340,7 +366,6 @@ df_quereys = []
 # figs.append(fig)
 
 
-
 # figs[-1].show()
 
 # for fig in figs:
@@ -353,13 +378,13 @@ df_quereys = []
 
 # create_tabbed_panel(figs)
 
-#query 10
+# query 10
 df_query = execute_query(quereys[9])
 breakpoint()
 plot_query(df_query, titles[9], plot_3D[9])
-#print column names 
+# print column names
 # print(df_query.columns)
-# fig = plot3d(df_query, 
+# fig = plot3d(df_query,
 #             "Safety Equipment 1",
 #             "Severity",
 #             "Total Accidents",
