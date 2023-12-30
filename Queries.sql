@@ -1,4 +1,4 @@
--- Query 1: Retrieve information about accidents involving pedestrians, including their characteristics and the type of vehicle involved
+-- Query_3D 1: Retrieve information about accidents involving pedestrians, including their characteristics and the type of vehicle involved
 USE accidentsroutiers;
 
 -- INSERT INTO accidentsroutiers.categorie_du_vehicule
@@ -6,7 +6,7 @@ USE accidentsroutiers;
 -- ('-1', 'unconnue');
 
 SELECT 
-    usagers.id_usager,
+    usagers.id_usager AS 'User ID',
     gravite.gravite AS 'Severity',
     caracteristiques.mois AS 'Month',
     categorie_du_vehicule.categorie_du_vehicule AS 'Vehicle Category'
@@ -25,9 +25,9 @@ FROM
 WHERE
     usagers.catu = 3;
 
--- Query 2: Find the most common atmospheric condition during accidents.
+-- Query_2D 2: Find the most common atmospheric condition during accidents.
 SELECT 
-    conditions_atmospheriques.conditions_atmospheriques,
+    conditions_atmospheriques.conditions_atmospheriques AS "Conditions Atmospheriques"
     COUNT(*) AS 'Accident Count'
 FROM 
     conditions_atmospheriques
@@ -39,7 +39,7 @@ ORDER BY
     COUNT(*) DESC
 LIMIT 5;
 
--- Query 3: Find the average number of accidents for each category of the road.
+-- Query_2D 3: Find the average number of accidents for each category of the road.
 SELECT
     cat AS "Categorie De Route",
     c_acc / (SELECT COUNT(*) FROM categorie_de_route) AS "Avg Num Accidents"
@@ -55,9 +55,9 @@ FROM (
         catr
 ) AS T;
 
--- Query 4: List the different types of motorizations (type_motorisation) and the count of accidents for each type.
+-- Query_2D 4: List the different types of motorizations (type_motorisation) and the count of accidents for each type.
 SELECT 
-    type_motorisation.type_motorisation,
+    type_motorisation.type_motorisation AS 'Type of Motorization',
     COUNT(*) AS 'Accident Count'
 FROM 
     type_motorisation
@@ -66,12 +66,12 @@ JOIN
 GROUP BY 
     type_motorisation.type_motorisation;
 
--- Query 5: Retrieve the distribution of accidents across different categories such as time of day (lum), weather conditions (atm), and road types (catr).
+-- Query_3D 5: Retrieve the distribution of accidents across different categories such as time of day (lum), weather conditions (atm), and road types (catr).
 SELECT 
-    conditions_atmospheriques.conditions_atmospheriques,
-    categorie_de_route.categorie_de_route,
-    lumiere.lumiere,
-    infrastructure.infrastructure,
+conditions_atmospheriques.conditions_atmospheriques AS 'Weather Conditions',
+    categorie_de_route.categorie_de_route AS 'Road Type',
+    lumiere.lumiere AS 'Lighting Conditions',
+    infrastructure.infrastructure AS 'Infrastructure',
     COUNT(*) as accident_count
 FROM 
     caracteristiques
@@ -90,13 +90,15 @@ GROUP BY
 ORDER BY 
     accident_count DESC;
 
--- Query 6: Analyze the severity of accidents by looking at the number of fatalities, injuries, and the types of vehicles involved.
-SELECT gravite, COUNT(*) as severity_count FROM gravite JOIN usagers ON grav = id_gravite GROUP BY grav;
+-- Query_2D 6: Analyze the severity of accidents by looking at the number of fatalities, injuries, and the types of vehicles involved.
+SELECT gravite AS severity
+, COUNT(*) aS severity_count
+ as severity_count FROM gravite JOIN usagers ON grav = id_gravite GROUP BY grav;
 
--- Query 7: Explore the involvement of different vehicle categories (catv) in accidents and analyze their contribution to overall road safety.
+-- Query_2D 7: Explore the involvement of different vehicle categories (catv) in accidents and analyze their contribution to overall road safety.
 SELECT 
-    categorie_du_vehicule,
-    COUNT(*) as accident_count
+    categorie_du_vehicule AS 'Vehicle Category',
+    COUNT(*) as 'Total Accident'
 FROM 
     vehicules
 JOIN 
@@ -104,7 +106,7 @@ JOIN
 GROUP BY 
     categorie_du_vehicule;
 
--- Query 8: Examine the types of collisions (col) that occur most frequently. Determine if certain collision types are associated with higher injury rates.
+-- Query_2D 8: Examine the types of collisions (col) that occur most frequently. Determine if certain collision types are associated with higher injury rates.
 SELECT 
     collision.collision AS 'Collision Type',
     COUNT(*) as 'Total Accident'
@@ -115,9 +117,9 @@ JOIN
 GROUP BY
     collision;
 
- -- Query 9: Analyze the age and gender (sexe) distribution of individuals involved in accidents and determine if there are age or gender-specific patterns. Safety Equipment Usage:
+ -- Query_2D 9: Analyze the age and gender (sexe) distribution of individuals involved in accidents and determine if there are age or gender-specific patterns. Safety Equipment Usage:
 SELECT 
-    sexe.sexe as Gender,
+    sexe.sexe as 'Gender'
     AVG(usagers.secu1 + usagers.secu2 + usagers.secu3) AS 'Average Equipment Use Score'
 FROM
     usagers
@@ -128,13 +130,13 @@ WHERE
 GROUP BY 
     sexe.sexe;
 
- -- Query 10: Explore the usage of safety equipment (secu1, secu2, secu3) and its correlation with injury severity. Driver Analysis:
+ -- Query_3D 10: Explore the usage of safety equipment (secu1, secu2, secu3) and its correlation with injury severity. Driver Analysis:
 SELECT
-    secu1.secu1 AS SafetyEquipment1,
-    secu2.secu2 AS SafetyEquipment2,
-    secu3.secu3 AS SafetyEquipment3,
-    gravite.gravite AS InjurySeverity,
-    COUNT(*) AS TotalAccidents
+    secu1.secu1 AS "Safety Equipment 1"
+    secu2.secu2 AS "Safety Equipment 2"
+    secu3.secu3 AS "Safety Equipment 3"
+    gravite.gravite AS "Severity"
+    COUNT(*) AS "Total Accidents"
 FROM
     Usagers u
 JOIN 
@@ -150,11 +152,11 @@ WHERE
 GROUP BY
     u.secu1, u.secu2, u.secu3, u.grav;
 
- -- Query 11: Focus on pedestrian-related data (catu=3) to understand the locations (locp) and actions (actp) leading to pedestrian accidents. Vehicle Manoeuvres:
+ -- Query_3D 11: Focus on pedestrian-related data (catu=3) to understand the locations (locp) and actions (actp) leading to pedestrian accidents. Vehicle Manoeuvres:
 SELECT
-    locp.locp AS PedestrianLocation,
-    action_du_pieton AS PedestrianAction,
-    COUNT(*) AS TotalPedestrianAccidents
+    locp.locp AS "Location of Pedestrian"
+    action_du_pieton AS "Action of Pedestrian"
+    COUNT(*) AS "Total Accidents"
 FROM
     Usagers u
 JOIN 
@@ -166,13 +168,13 @@ WHERE
 GROUP BY
     u.locp, u.actp;
 
- -- Query 12: Investigate the types of manoeuvres performed by vehicles before accidents and their impact on collision outcomes.
+ -- Query_3D 12: Investigate the types of manoeuvres performed by vehicles before accidents and their impact on collision outcomes.
 SELECT
-    m.manoeuvre_principale_avant_accident_ AS ManeuverType,
-    COUNT(*) AS TotalAccidents,
-    SUM(CASE WHEN u.grav = 2 THEN 1 ELSE 0 END) AS FatalAccidents,
-    SUM(CASE WHEN u.grav = 3 THEN 1 ELSE 0 END) AS HospitalizedAccidents,
-    SUM(CASE WHEN u.grav = 4 THEN 1 ELSE 0 END) AS LightInjuryAccidents
+    m.manoeuvre_principale_avant_accident_ AS "Manoeuvre",
+    COUNT(*) AS "Total Accidents"n
+    SUM(CASE WHEN u.grav = 2 THEN 1 ELSE 0 END) AS "Serious Injury Accidents"
+    SUM(CASE WHEN u.grav = 3 THEN 1 ELSE 0 END) AS "Death Accidents"
+    SUM(CASE WHEN u.grav = 4 THEN 1 ELSE 0 END) AS "Unscathed Accidents"
 FROM
     Vehicules v
 JOIN
