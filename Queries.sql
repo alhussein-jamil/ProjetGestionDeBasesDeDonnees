@@ -1,12 +1,12 @@
 USE accidentsroutiers;
 
--- Query_3D 1: Retrieve information about accidents involving pedestrians, including their characteristics and the type of vehicle involved
+-- Query_scatter2D 1: Retrieve information about accidents involving pedestrians, including their characteristics and the type of vehicle involved
 -- title='Accident Severity by Month and Vehicle Category'
 SELECT 
-    usagers.id_usager AS 'User ID',
-    gravite.gravite AS 'Severity',
     caracteristiques.mois AS 'Month',
-    categorie_du_vehicule.categorie_du_vehicule AS 'Vehicle Category'
+    categorie_du_vehicule.categorie_du_vehicule AS 'Vehicle Category',
+    gravite.gravite AS 'Severity'
+    
 FROM
     usagers
         JOIN
@@ -68,11 +68,11 @@ GROUP BY
 -- Query_3D 5: Retrieve the distribution of accidents across different categories such as time of day (lum), weather conditions (atm), and road types (catr).
 -- title='Severity of Accidents across lighting conditions, weather conditions and road types'
 SELECT 
-conditions_atmospheriques.conditions_atmospheriques AS 'Weather Conditions',
-    categorie_de_route.categorie_de_route AS 'Road Type',
+    conditions_atmospheriques.conditions_atmospheriques AS 'Weather Conditions',
     lumiere.lumiere AS 'Lighting Conditions',
-    infrastructure.infrastructure AS 'Infrastructure',
-    COUNT(*) as accident_count
+    COUNT(*) as accident_count,
+    categorie_de_route.categorie_de_route AS 'Road Type',
+    infrastructure.infrastructure AS 'Infrastructure'
 FROM 
     caracteristiques
 JOIN 
@@ -90,13 +90,15 @@ GROUP BY
 ORDER BY 
     accident_count DESC;
 
--- Query_2D 6: Analyze the severity of accidents by looking at the number of fatalities, injuries, and the types of vehicles involved.
+-- Query_pie2D 6: Analyze the severity of accidents by looking at the number of fatalities, injuries, and the types of vehicles involved.
 -- title='Accidents by the number of fatalities, injuries and vehicle Category '
-SELECT gravite AS severity
-, COUNT(*) aS severity_count
- as severity_count FROM gravite JOIN usagers ON grav = id_gravite GROUP BY grav;
+SELECT 
+    gravite AS severity,
+    COUNT(*) aS severity_count
+FROM gravite 
+JOIN usagers ON grav = id_gravite GROUP BY grav;
 
--- Query_2D 7: Explore the involvement of different vehicle categories (catv) in accidents and analyze their contribution to overall road safety.
+-- Query_pie2D 7: Explore the involvement of different vehicle categories (catv) in accidents and analyze their contribution to overall road safety.
 -- title='Accidents by Vehicle Category'
 SELECT 
     categorie_du_vehicule AS 'Vehicle Category',
@@ -106,7 +108,8 @@ FROM
 JOIN 
     categorie_du_vehicule ON categorie_du_vehicule.id_categorie_du_vehicule = catv
 GROUP BY 
-    categorie_du_vehicule;
+    categorie_du_vehicule
+Limit 10;
 
 -- Query_2D 8: Examine the types of collisions (col) that occur most frequently. Determine if certain collision types are associated with higher injury rates.
 -- title='Most Frequent Collision Types'
@@ -157,12 +160,12 @@ WHERE
 GROUP BY
     u.secu1, u.secu2, u.secu3, u.grav;
 
--- Query_3D 11: Focus on pedestrian-related data (catu=3) to understand the locations (locp) and actions (actp) leading to pedestrian accidents. Vehicle Manoeuvres:
+-- Query_2D 11: Focus on pedestrian-related data (catu=3) to understand the locations (locp) and actions (actp) leading to pedestrian accidents. Vehicle Manoeuvres:
 -- title='Pedestrian Accidents'
 SELECT
     locp.locp AS "Location of Pedestrian",
-    action_du_pieton AS "Action of Pedestrian",
-    COUNT(*) AS "Total Accidents"
+    COUNT(*) AS "Total Accidents",
+    action_du_pieton AS "Action of Pedestrian"
 FROM
     Usagers u
 JOIN 
@@ -170,11 +173,11 @@ JOIN
 JOIN 
     action_du_pieton ON  id_action_du_pieton = actp
 WHERE
-    u.catu = 3 -- Filtering for pedestrians
+    u.catu = 3 
 GROUP BY
     u.locp, u.actp;
 
--- Query_3D 12: Investigate the types of manoeuvres performed by vehicles before accidents and their impact on collision outcomes.
+-- Query_2D 12: Investigate the types of manoeuvres performed by vehicles before accidents and their impact on collision outcomes.
 -- title='Manoeuvre Types and Accident Outcomes'
 SELECT
     m.manoeuvre_principale_avant_accident_ AS "Manoeuvre",
@@ -189,6 +192,4 @@ JOIN
 JOIN 
     manoeuvre_principale_avant_accident_ m ON id_manoeuvre_principale_avant_accident_ = manv 
 GROUP BY
-    v.manv
-ORDER BY
-    TotalAccidents DESC;
+    v.manv;
