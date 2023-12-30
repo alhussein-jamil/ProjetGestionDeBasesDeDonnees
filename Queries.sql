@@ -25,13 +25,12 @@ WHERE
 -- Query_2D 2: Find the most common atmospheric condition during accidents.
 -- title='Most Common Atmospheric Conditions'
 SELECT 
-    conditions_atmospheriques.conditions_atmospheriques AS "Conditions Atmospheriques"
+    conditions_atmospheriques.conditions_atmospheriques AS "Conditions Atmospheriques",
     COUNT(*) AS 'Accident Count'
 FROM 
-    conditions_atmospheriques
+    conditions_atmospheriques 
 JOIN 
-    caracteristiques ON conditions_atmospheriques.id_conditions_atmospheriques = caracteristiques.atm
-GROUP BY 
+    caracteristiques ON conditions_atmospheriques.id_conditions_atmospheriques = caracteristiques.atm GROUP BY 
     conditions_atmospheriques.conditions_atmospheriques
 ORDER BY 
     COUNT(*) DESC
@@ -124,7 +123,7 @@ GROUP BY
 -- Query_2D 9: Analyze the age and gender (sexe) distribution of individuals involved in accidents and determine if there are age or gender-specific patterns. Safety Equipment Usage:
 -- title='Average Equipment Use Score by Gender'
 SELECT 
-    sexe.sexe as 'Gender'
+    sexe.sexe as 'Gender',
     AVG(usagers.secu1 + usagers.secu2 + usagers.secu3) AS 'Average Equipment Use Score'
 FROM
     usagers
@@ -161,8 +160,8 @@ GROUP BY
 -- Query_3D 11: Focus on pedestrian-related data (catu=3) to understand the locations (locp) and actions (actp) leading to pedestrian accidents. Vehicle Manoeuvres:
 -- title='Pedestrian Accidents'
 SELECT
-    locp.locp AS "Location of Pedestrian"
-    action_du_pieton AS "Action of Pedestrian"
+    locp.locp AS "Location of Pedestrian",
+    action_du_pieton AS "Action of Pedestrian",
     COUNT(*) AS "Total Accidents"
 FROM
     Usagers u
@@ -179,9 +178,9 @@ GROUP BY
 -- title='Manoeuvre Types and Accident Outcomes'
 SELECT
     m.manoeuvre_principale_avant_accident_ AS "Manoeuvre",
-    COUNT(*) AS "Total Accidents"n
-    SUM(CASE WHEN u.grav = 2 THEN 1 ELSE 0 END) AS "Serious Injury Accidents"
-    SUM(CASE WHEN u.grav = 3 THEN 1 ELSE 0 END) AS "Death Accidents"
+    COUNT(*) AS "Total Accidents",
+    SUM(CASE WHEN u.grav = 2 THEN 1 ELSE 0 END) AS "Serious Injury Accidents",
+    SUM(CASE WHEN u.grav = 3 THEN 1 ELSE 0 END) AS "Death Accidents",
     SUM(CASE WHEN u.grav = 4 THEN 1 ELSE 0 END) AS "Unscathed Accidents"
 FROM
     Vehicules v
