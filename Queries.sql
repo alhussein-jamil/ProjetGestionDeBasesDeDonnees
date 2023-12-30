@@ -132,10 +132,10 @@ GROUP BY
 
  -- Query_3D 10: Explore the usage of safety equipment (secu1, secu2, secu3) and its correlation with injury severity. Driver Analysis:
 SELECT
-    secu1.secu1 AS "Safety Equipment 1"
-    secu2.secu2 AS "Safety Equipment 2"
-    secu3.secu3 AS "Safety Equipment 3"
-    gravite.gravite AS "Severity"
+    secu1.secu1 AS "Safety Equipment 1",
+    secu2.secu2 AS "Safety Equipment 2",
+    secu3.secu3 AS "Safety Equipment 3",
+    gravite.gravite AS "Severity",
     COUNT(*) AS "Total Accidents"
 FROM
     Usagers u
@@ -148,7 +148,7 @@ JOIN
 JOIN 
     gravite ON gravite.id_gravite = u.grav
 WHERE
-    u.catu = 1 -- Filtering for driver
+    u.catu = 1
 GROUP BY
     u.secu1, u.secu2, u.secu3, u.grav;
 
