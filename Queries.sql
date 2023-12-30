@@ -179,7 +179,8 @@ WHERE
 GROUP BY
     u.locp, u.actp;
 
- -- Query_3D 12: Investigate the types of manoeuvres performed by vehicles before accidents and their impact on collision outcomes.
+-- Query_3D 12: Investigate the types of manoeuvres performed by vehicles before accidents and their impact on collision outcomes.
+-- title='Manoeuvre Types and Accident Outcomes'
 SELECT
     m.manoeuvre_principale_avant_accident_ AS "Manoeuvre",
     COUNT(*) AS "Total Accidents"n
