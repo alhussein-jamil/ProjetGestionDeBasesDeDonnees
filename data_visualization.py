@@ -1,13 +1,14 @@
 import tkinter as tk
-from tkinter import ttk
-from tkinter import scrolledtext
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from tkinter import scrolledtext, ttk
+
 import matplotlib.pyplot as plt
-import mysql.connector
+import yaml
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from mysql.connector import MySQLConnection
-from query import Query
-import yaml 
+
 from plotting import plot_query
+from query import Query
+
 
 class DataVisualizationApp:
     def __init__(self, root, query_instance, values, name):
@@ -18,7 +19,7 @@ class DataVisualizationApp:
 
         # Paramètre modifiable
         self.selected_values = [tk.StringVar() for _ in values]
-        for i,val in enumerate(self.values):
+        for i, val in enumerate(self.values):
             self.selected_values[i].set(val[0])
         self.chart_frame = None
 
@@ -39,10 +40,16 @@ class DataVisualizationApp:
             label = ttk.Label(param_frame, text=f"{self.labels[i]}:")
             label.grid(row=i, column=0, sticky="w")
 
-            value_combobox = ttk.Combobox(param_frame, values=self.values[i], textvariable=self.selected_values[i])
+            value_combobox = ttk.Combobox(
+                param_frame, values=self.values[i], textvariable=self.selected_values[i]
+            )
             value_combobox.grid(row=i, column=1, sticky="w")
 
-        update_button = ttk.Button(param_frame, text="Mettre à jour", command=lambda: self.update(query_instance))
+        update_button = ttk.Button(
+            param_frame,
+            text="Mettre à jour",
+            command=lambda: self.update(query_instance),
+        )
         update_button.grid(row=len(self.values), column=0, columnspan=2, sticky="w")
 
         # Frame pour le diagramme à barres
@@ -50,7 +57,9 @@ class DataVisualizationApp:
         self.chart_frame.grid(row=1, column=0, sticky="nsew")
 
         # Zone de texte déroulante pour la requête SQL
-        self.query_text = scrolledtext.ScrolledText(self.chart_frame, width=50, height=20, wrap=tk.WORD)
+        self.query_text = scrolledtext.ScrolledText(
+            self.chart_frame, width=50, height=20, wrap=tk.WORD
+        )
         self.query_text.insert(tk.END, query_instance.get_query())
         self.query_text.grid(row=0, column=0, padx=10, pady=10)
 
@@ -69,10 +78,11 @@ class DataVisualizationApp:
         self.chart_frame.columnconfigure(0, weight=1)
         self.chart_frame.rowconfigure(0, weight=1)
 
-
     def create_plotting(self, query_instance):
         # Fetch the query result
-        query_instance.set_args([selected_value.get() for selected_value in self.selected_values])
+        query_instance.set_args(
+            [selected_value.get() for selected_value in self.selected_values]
+        )
 
         # Execute the query and get the result as a DataFrame
         query_instance.execute_query()
@@ -81,7 +91,7 @@ class DataVisualizationApp:
         columns = query_instance.df.columns
 
         fig = plot_query(
-            query_instance.df, 
+            query_instance.df,
             query_instance.title,
             query_instance.plot_3d,
             query_instance.scatter,
@@ -89,7 +99,7 @@ class DataVisualizationApp:
         )
 
         # Embed the Matplotlib figure into the frame
-        if hasattr(self, 'canvas'):
+        if hasattr(self, "canvas"):
             self.canvas.get_tk_widget().destroy()
             self.canvas = None
 
@@ -103,39 +113,43 @@ class DataVisualizationApp:
 
     def update(self, query_instance):
         # Fetch the query result
-        query_instance.set_args([selected_value.get() for selected_value in self.selected_values])
+        query_instance.set_args(
+            [selected_value.get() for selected_value in self.selected_values]
+        )
 
         # Execute the query and get the result as a DataFrame
         query_instance.execute_query()
 
-        self.query_text.delete('1.0', tk.END)
+        self.query_text.delete("1.0", tk.END)
 
         self.query_text.insert(tk.END, query_instance.get_query())
 
         self.update_plotting(query_instance)
 
     def update_plotting(self, query_instance):
-
         # Clear the existing chart
         self.canvas.get_tk_widget().destroy()
 
         # Create the updated chart
         self.create_plotting(query_instance)
 
-def run_app(query_instance_list):
 
+def run_app(query_instance_list):
     # Create the main application window
     root = tk.Tk()
     root.title("Genie Logiciel Visualization App")
 
-
     tabControl = ttk.Notebook(root)
-
 
     # Create an instance of DataVisualizationApp for each set of data
     for i, instance_data in enumerate(query_instance_list):
         # Create an instance of DataVisualizationApp for the current window
-        app = DataVisualizationApp(root, query_instance=instance_data, values=instance_data.config['args'], name = "Query {}".format(i+1))
+        app = DataVisualizationApp(
+            root,
+            query_instance=instance_data,
+            values=instance_data.config["args"],
+            name="Query {}".format(i + 1),
+        )
         tabControl.add(app.main_frame, text=f"Query {i+1}")
 
     tabControl.pack(expand=1, fill="both")
@@ -143,19 +157,17 @@ def run_app(query_instance_list):
     # Start the main loop
     root.mainloop()
 
+
 # Application principale
 if __name__ == "__main__":
-
     config_dict = yaml.safe_load(open("config.yaml"))
 
     # Replace 'your_mysql_connection_here' with your actual MySQL connection
     mysql_connection = MySQLConnection(
-
-            host= "localhost",
-            user= "CyberTitan",
-            password= "19216811",
-            database= "accidentsroutiers",
-        
+        host="localhost",
+        user="CyberTitan",
+        password="19216811",
+        database="accidentsroutiers",
     )
 
     queries_texts = []
@@ -167,9 +179,10 @@ if __name__ == "__main__":
 
     query_instance_list = []
 
-
-    for i,query_text in enumerate(queries_texts):
+    for i, query_text in enumerate(queries_texts):
         if f"query{i+1}" in config_dict:
-            query_instance_list.append(Query(query_text, config_dict[f"query{i+1}"], mysql_connection))
+            query_instance_list.append(
+                Query(query_text, config_dict[f"query{i+1}"], mysql_connection)
+            )
 
     run_app(query_instance_list)

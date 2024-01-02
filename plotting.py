@@ -5,16 +5,31 @@ import matplotlib
 import matplotlib.pyplot as plt
 import mysql.connector
 import pandas as pd
-import plotly.express as px
 from matplotlib.backends.backend_qt5agg import \
     FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import \
     NavigationToolbar2QT as NavigationToolbar
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget,
                              QVBoxLayout, QWidget)
 
 matplotlib.use("qt5agg")
+
+# Replace these with your MySQL database credentials
+# DB_CONFIG = {
+#     "host": "localhost",
+#     "user": "user4projet",
+#     "password": "Hellogenielogiciel2023",
+#     "database": "accidentsroutiers",
+#     "auth_plugin": "mysql_native_password",
+# }
+DB_CONFIG = {
+    "host": "localhost",
+    "user": "CyberTitan",
+    "password": "19216811",
+    "database": "accidentsroutiers",
+}
+
+FIG_SIZE = (10, 10)
 
 
 class PlotWindow:
@@ -56,31 +71,6 @@ class PlotWindow:
 
     def show(self):
         self.app.exec_()
-
-
-# Replace these with your MySQL database credentials
-# DB_CONFIG = {
-#     "host": "localhost",
-#     "user": "user4projet",
-#     "password": "Hellogenielogiciel2023",
-#     "database": "accidentsroutiers",
-#     "auth_plugin": "mysql_native_password",
-# }
-DB_CONFIG = {
-    'host': 'localhost',
-    'user': 'CyberTitan',
-    'password': '19216811',
-    'database': 'accidentsroutiers',
-}
-queries = [""]
-titles = []
-plot_3D = []
-scatter = []
-figs = []
-pie = []
-df_queries = []
-
-FIG_SIZE = (10, 10)
 
 
 def plot3d(
@@ -211,44 +201,9 @@ def connect_to_db():
 
 
 # Function to execute a query and return a DataFrame
-def execute_query(query):
-    connection = connect_to_db()
+def execute_query(query, connection):
     df = pd.read_sql_query(query, connection)
-    connection.close()
     return df
-
-
-# ignore comments starting with -- and each query starts with SELECT and ends with ; annd can be on multiple lines
-with open("Queries.sql") as f:
-    i = 0
-    for line in f:
-        if "--" in line or "USE" in line:
-            if "title" in line:
-                titles.append(
-                    line.split("title")[1].split("=")[1].strip().replace("'", "")
-                )
-                print(titles[-1])
-            else:
-                if "Query" in line:
-                    if "3D" in line:
-                        plot_3D.append(True)
-                    else:
-                        plot_3D.append(False)
-                    if "scatter" in line:
-                        scatter.append(True)
-                    else:
-                        scatter.append(False)
-                    if "pie" in line:
-                        pie.append(True)
-                    else:
-                        pie.append(False)
-            continue
-        queries[i] += line
-        if line.endswith(";\n"):
-            i += 1
-            queries.append("")
-# remove last empty query
-queries.pop()
 
 
 # Tailles de figure globales
@@ -279,7 +234,7 @@ def plot2D(df_query, x, y, z, title, scat, pie):
         figure, ax = plt.subplots(figsize=FIG_SIZE)
         ax.pie(df_query[y], labels=df_query[x], autopct="%1.1f%%", startangle=140)
         ax.set_title(title)
-    
+
     elif title == "Manoeuvre Types and Accident Outcomes":
         figure, ax = plt.subplots(figsize=FIG_SIZE)
 
@@ -334,21 +289,14 @@ def plot2D(df_query, x, y, z, title, scat, pie):
     return figure
 
 
-def plot_query (df_query, title , plot_3D, scatter, pie):
+def plot_query(df_query, title, plot_3D, scatter, pie):
     if plot_3D:
         # add an artifical column if len(columns) < 4
         if len(df_query.columns) < 4:
             df_query["artificial"] = 0
         columns = df_query.columns
-        return  plot3d(
-            df_query,
-            *columns[:4],
-            title,
-            *columns[:3],
-            False,
-            False,
-            False,
-            False
+        return plot3d(
+            df_query, *columns[:4], title, *columns[:3], False, False, False, False
         )
     else:
         columns = df_query.columns
@@ -376,5 +324,52 @@ def plot_queries(df_queries, titles, Plot_3D, scatter, pies):
 
 
 if __name__ == "__main__":
+    queries = [""]
+    titles = []
+    plot_3D = []
+    scatter = []
+    figs = []
+    pie = []
+    df_queries = []
 
-    plot_queries([execute_query(query) for query in queries], titles, plot_3D, scatter, pie)
+    # ignore comments starting with -- and each query starts with SELECT and ends with ; annd can be on multiple lines
+    with open("Queries.sql") as f:
+        i = 0
+        for line in f:
+            if "--" in line or "USE" in line:
+                if "title" in line:
+                    titles.append(
+                        line.split("title")[1].split("=")[1].strip().replace("'", "")
+                    )
+                    print(titles[-1])
+                else:
+                    if "Query" in line:
+                        if "3D" in line:
+                            plot_3D.append(True)
+                        else:
+                            plot_3D.append(False)
+                        if "scatter" in line:
+                            scatter.append(True)
+                        else:
+                            scatter.append(False)
+                        if "pie" in line:
+                            pie.append(True)
+                        else:
+                            pie.append(False)
+                continue
+            queries[i] += line
+            if line.endswith(";\n"):
+                i += 1
+                queries.append("")
+    # remove last empty query
+    queries.pop()
+
+    connection = connect_to_db()
+
+    plot_queries(
+        [execute_query(query, connection) for query in queries],
+        titles,
+        plot_3D,
+        scatter,
+        pie,
+    )

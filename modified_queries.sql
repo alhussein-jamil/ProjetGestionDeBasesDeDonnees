@@ -31,7 +31,7 @@ JOIN
     conditions_atmospheriques.conditions_atmospheriques
 ORDER BY 
     COUNT(*) DESC
-LIMIT $choice$;
+LIMIT 5;
 
 -- Query_2D 3: Find the average number of accidents for each category of the road.
 -- title='Average Number of Accidents for Each Road Category'
@@ -82,6 +82,8 @@ JOIN
     lumiere ON id_lumiere = lum
 JOIN
     infrastructure ON id_infrastructure = infra
+WHERE
+    id_conditions_atmospheriques = $choice$
 GROUP BY 
     conditions_atmospheriques, categorie_de_route, lumiere, infrastructure
 ORDER BY 
