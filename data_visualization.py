@@ -108,9 +108,8 @@ class DataVisualizationApp:
         # Execute the query and get the result as a DataFrame
         query_instance.execute_query()
 
-
         self.query_text.delete('1.0', tk.END)
-        
+
         self.query_text.insert(tk.END, query_instance.get_query())
 
         self.update_plotting(query_instance)
@@ -127,7 +126,7 @@ def run_app(query_instance_list):
 
     # Create the main application window
     root = tk.Tk()
-    root.title("Multi-Window Data Visualization App")
+    root.title("Genie Logiciel Visualization App")
 
 
     tabControl = ttk.Notebook(root)
@@ -167,6 +166,7 @@ if __name__ == "__main__":
             queries_texts[-1] += line
 
     query_instance_list = []
+
 
     for i,query_text in enumerate(queries_texts):
         if f"query{i+1}" in config_dict:

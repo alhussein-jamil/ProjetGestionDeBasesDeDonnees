@@ -4,4 +4,6 @@ query1:
 query2: 
   args:
       "nombre d'affichages": [5,6,7,8,9]
-      
+query5:
+  args:
+      "id of atm" : [1,2,3,4,5]
