@@ -59,14 +59,19 @@ class PlotWindow:
 
 
 # Replace these with your MySQL database credentials
+# DB_CONFIG = {
+#     "host": "localhost",
+#     "user": "user4projet",
+#     "password": "Hellogenielogiciel2023",
+#     "database": "accidentsroutiers",
+#     "auth_plugin": "mysql_native_password",
+# }
 DB_CONFIG = {
-    "host": "localhost",
-    "user": "user4projet",
-    "password": "Hellogenielogiciel2023",
-    "database": "accidentsroutiers",
-    "auth_plugin": "mysql_native_password",
+    'host': 'localhost',
+    'user': 'CyberTitan',
+    'password': '19216811',
+    'database': 'accidentsroutiers',
 }
-
 queries = [""]
 titles = []
 plot_3D = []
@@ -249,7 +254,7 @@ queries.pop()
 # Tailles de figure globales
 def plot2D(df_query, x, y, z, title, scat, pie):
     figure = None  # Initialiser la variable figure
-
+    breakpoint()
     if scat:
         z_mapping = {"Indemne": 1, "Blessé léger": 2, "Blessé hospitalisé": 3, "Tué": 4}
         df_query["Severity"] = df_query[z].map(z_mapping)
@@ -329,45 +334,47 @@ def plot2D(df_query, x, y, z, title, scat, pie):
     return figure
 
 
-def plot_query(df_queries, titles, Plot_3D, scatter, pies):
+def plot_query (df_query, title , plot_3D, scatter, pie):
+    if plot_3D:
+        # add an artifical column if len(columns) < 4
+        if len(df_query.columns) < 4:
+            df_query["artificial"] = 0
+        columns = df_query.columns
+        return  plot3d(
+            df_query,
+            *columns[:4],
+            title,
+            *columns[:3],
+            False,
+            False,
+            False,
+            False
+        )
+    else:
+        columns = df_query.columns
+
+        return plot2D(
+            df_query,
+            *columns[:2],
+            title=title,
+            scat=scatter,
+            z=None if len(columns) < 3 else columns[2],
+            pie=pie
+        )
+
+
+def plot_queries(df_queries, titles, Plot_3D, scatter, pies):
     figs = []
     pw = PlotWindow()
     for df_query, title, plot_3D, scat, pie in zip(
         df_queries, titles, Plot_3D, scatter, pies
     ):
-        if plot_3D:
-            # add an artifical column if len(columns) < 4
-            if len(df_query.columns) < 4:
-                df_query["artificial"] = 0
-            columns = df_query.columns
-            figs.append(
-                plot3d(
-                    df_query,
-                    *columns[:4],
-                    title,
-                    *columns[:3],
-                    False,
-                    False,
-                    False,
-                    False
-                )
-            )
-        else:
-            columns = df_query.columns
-
-            figs.append(
-                plot2D(
-                    df_query,
-                    *columns[:2],
-                    title=title,
-                    scat=scat,
-                    z=None if len(columns) < 3 else columns[2],
-                    pie=pie
-                )
-            )
+        figs.append(plot_query(df_query, title, plot_3D, scat, pie))
         pw.addPlot(title, figs[-1])
 
     pw.show()
 
 
-plot_query([execute_query(query) for query in queries], titles, plot_3D, scatter, pie)
+if __name__ == "__main__":
+
+    plot_queries([execute_query(query) for query in queries], titles, plot_3D, scatter, pie)
