@@ -44,3 +44,72 @@ class Query:
                 continue
             self.query_text += line
             self.query_text += "\n"
+
+
+if __name__ == "__main__":
+
+    # Replace 'your_query_here' with your actual SQL query
+    query_string = """
+        -- Query_scatter2D 1: Retrieve information about accidents involving pedestrians, including their characteristics and the type of vehicle involved
+        -- title='Accident Severity by Month and Vehicle Category'
+            SELECT 
+            caracteristiques.mois AS 'Month',
+            categorie_du_vehicule.categorie_du_vehicule AS 'Vehicle Category',
+            gravite.gravite AS 'Severity'
+            
+        FROM
+            usagers
+                JOIN
+            caracteristiques ON Accident_Id = Num_Acc
+                JOIN
+            vehicules USING (Num_Acc)
+                JOIN
+            categorie_du_vehicule ON vehicules.catv = categorie_du_vehicule.id_categorie_du_vehicule
+                JOIN
+            gravite ON usagers.grav = gravite.id_gravite
+                JOIN
+            categorie_usager ON usagers.catu = categorie_usager.id_categorie_usager
+        WHERE
+            usagers.catu = $choice$;
+        """
+
+    # Replace 'your_config_here' with your actual configuration dictionary
+    config_dict = {
+        'args': [
+            '3'
+        ]
+    }
+
+    # Replace 'your_mysql_connection_here' with your actual MySQL connection
+    mysql_connection = MySQLConnection(
+        host='localhost',
+        user='user4projet',
+        password='Hellogenielogiciel2023',
+        database='accidentsroutiers',
+        auth_plugin='mysql_native_password'
+    )
+
+    # Create an instance of the Query class
+    query_instance = Query(query_string, config_dict, mysql_connection)
+
+    # Print the original query
+    print("Original Query:")
+    print(query_instance.get_query())
+
+    # Set new arguments if needed
+    new_args = ['2']
+    query_instance.set_args(new_args)
+
+    # Print the modified query with new arguments
+    print("\nModified Query:")
+    print(query_instance.get_query())
+
+    # Execute the query and get the result as a DataFrame
+    query_instance.execute_query()
+
+    # Access the DataFrame
+    result_dataframe = query_instance.df
+
+    # Display the result
+    print("\nQuery Result:")
+    print(result_dataframe)
