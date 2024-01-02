@@ -42,7 +42,7 @@ class DataVisualizationApp:
             value_combobox = ttk.Combobox(param_frame, values=self.values[i], textvariable=self.selected_values[i])
             value_combobox.grid(row=i, column=1, sticky="w")
 
-        update_button = ttk.Button(param_frame, text="Mettre à jour", command=lambda: self.update_plotting(query_instance))
+        update_button = ttk.Button(param_frame, text="Mettre à jour", command=lambda: self.update(query_instance))
         update_button.grid(row=len(self.values), column=0, columnspan=2, sticky="w")
 
         # Frame pour le diagramme à barres
@@ -50,9 +50,9 @@ class DataVisualizationApp:
         self.chart_frame.grid(row=1, column=0, sticky="nsew")
 
         # Zone de texte déroulante pour la requête SQL
-        query_text = scrolledtext.ScrolledText(self.chart_frame, width=50, height=10, wrap=tk.WORD)
-        query_text.insert(tk.END, query_instance.get_query())
-        query_text.grid(row=0, column=0, padx=10, pady=10)
+        self.query_text = scrolledtext.ScrolledText(self.chart_frame, width=50, height=20, wrap=tk.WORD)
+        self.query_text.insert(tk.END, query_instance.get_query())
+        self.query_text.grid(row=0, column=0, padx=10, pady=10)
 
         # Initialiser le diagramme à barres
         self.create_plotting(query_instance)
@@ -69,43 +69,6 @@ class DataVisualizationApp:
         self.chart_frame.columnconfigure(0, weight=1)
         self.chart_frame.rowconfigure(0, weight=1)
 
-
-    # def plot2D(self, df_query, x, y, z, title, scat, pie):
-    #     fig, ax = plt.subplots()
-
-    #     if scat:
-    #         z_mapping = {"Indemne": 1, "Blessé léger": 2, "Blessé hospitalisé": 3, "Tué": 4}
-    #         df_query["Severity"] = df_query[z].map(z_mapping)
-
-    #         scatter = ax.scatter(
-    #             df_query[x], df_query[y], c=df_query["Severity"], cmap="viridis", s=100
-    #         )
-
-    #         # Adding the color bar with severity names
-    #         cbar = plt.colorbar(scatter, ax=ax, ticks=list(z_mapping.values()))
-    #         cbar.set_ticklabels(list(z_mapping.keys()), rotation=30, fontsize=10)
-    #         cbar.set_label("Severity")
-
-    #         # Adding labels and title
-    #         ax.set_xlabel(x)
-    #         ax.set_ylabel(y)
-    #         ax.set_title(title)
-
-    #     elif pie:
-    #         # Pie chart
-    #         ax.pie(df_query[y], labels=df_query[x], autopct="%1.1f%%", startangle=140)
-    #         ax.set_title(title)
-
-    #     else:
-    #         # Bar chart
-    #         ax.bar(df_query[x], df_query[y])
-    #         ax.set_xticklabels(df_query[x], rotation=30, ha="right")
-
-    #         ax.set_xlabel(x)
-    #         ax.set_ylabel(y)
-    #         ax.set_title(title)
-
-    #     return fig
 
     def create_plotting(self, query_instance):
         # Fetch the query result
@@ -138,12 +101,21 @@ class DataVisualizationApp:
         ax = fig.axes[0]
         ax.set_xlabel(columns[0])
 
-    def update_plotting(self, query_instance):
+    def update(self, query_instance):
         # Fetch the query result
         query_instance.set_args([selected_value.get() for selected_value in self.selected_values])
 
         # Execute the query and get the result as a DataFrame
         query_instance.execute_query()
+
+
+        self.query_text.delete('1.0', tk.END)
+        
+        self.query_text.insert(tk.END, query_instance.get_query())
+
+        self.update_plotting(query_instance)
+
+    def update_plotting(self, query_instance):
 
         # Clear the existing chart
         self.canvas.get_tk_widget().destroy()
