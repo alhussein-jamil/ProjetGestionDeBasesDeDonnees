@@ -254,7 +254,7 @@ queries.pop()
 # Tailles de figure globales
 def plot2D(df_query, x, y, z, title, scat, pie):
     figure = None  # Initialiser la variable figure
-    breakpoint()
+
     if scat:
         z_mapping = {"Indemne": 1, "Blessé léger": 2, "Blessé hospitalisé": 3, "Tué": 4}
         df_query["Severity"] = df_query[z].map(z_mapping)
@@ -274,13 +274,13 @@ def plot2D(df_query, x, y, z, title, scat, pie):
         ax.set_ylabel(y)
         ax.set_title(title)
 
-    if pie:
+    elif pie:
         # Pie chart
         figure, ax = plt.subplots(figsize=FIG_SIZE)
         ax.pie(df_query[y], labels=df_query[x], autopct="%1.1f%%", startangle=140)
         ax.set_title(title)
-
-    if title == "Manoeuvre Types and Accident Outcomes":
+    
+    elif title == "Manoeuvre Types and Accident Outcomes":
         figure, ax = plt.subplots(figsize=FIG_SIZE)
 
         # Bar chart
