@@ -11,15 +11,16 @@ from query import Query
 
 
 class DataVisualizationApp:
-    def __init__(self, root, query_instance, values, name):
+    def __init__(self, root, query_instance, values, mapping, name):
         self.root = root
 
         self.labels = list(values.keys())
         self.values = list(values.values())
+        self.mapping = list(mapping.values())
 
         # Paramètre modifiable
         self.selected_values = [tk.StringVar() for _ in values]
-        for i, val in enumerate(self.values):
+        for i, val in enumerate(self.mapping):
             self.selected_values[i].set(val[0])
         self.chart_frame = None
 
@@ -36,29 +37,34 @@ class DataVisualizationApp:
         param_frame = ttk.Frame(main_frame, padding=(10, 10, 10, 10))
         param_frame.grid(row=0, column=0, sticky="nsew")
 
-        for i in range(len(self.values)):
+        for i in range(len(self.mapping)):
             label = ttk.Label(param_frame, text=f"{self.labels[i]}:")
             label.grid(row=i, column=0, sticky="w")
 
+            # Increase the font size in the Combobox
             value_combobox = ttk.Combobox(
-                param_frame, values=self.values[i], textvariable=self.selected_values[i]
+                param_frame,
+                values=self.mapping[i],
+                textvariable=self.selected_values[i],
+                style='TCombobox',  # This style is added for increased font size
             )
             value_combobox.grid(row=i, column=1, sticky="w")
 
         update_button = ttk.Button(
             param_frame,
-            text="Mettre à jour",
+            text="Update",
             command=lambda: self.update(query_instance),
         )
-        update_button.grid(row=len(self.values), column=0, columnspan=2, sticky="w")
+        update_button.grid(row=len(self.mapping), column=0, columnspan=2, sticky="w")
 
-        # Frame pour le diagramme à barres
+        # Frame pour le diagramme
         self.chart_frame = ttk.Frame(main_frame)
         self.chart_frame.grid(row=1, column=0, sticky="nsew")
 
+
         # Zone de texte déroulante pour la requête SQL
         self.query_text = scrolledtext.ScrolledText(
-            self.chart_frame, width=50, height=20, wrap=tk.WORD
+            self.chart_frame, width=80, height=30, wrap=tk.WORD
         )
         self.query_text.insert(tk.END, query_instance.get_query())
         self.query_text.grid(row=0, column=0, padx=10, pady=10)
@@ -81,7 +87,10 @@ class DataVisualizationApp:
     def create_plotting(self, query_instance):
         # Fetch the query result
         query_instance.set_args(
-            [selected_value.get() for selected_value in self.selected_values]
+            [
+                str(self.values[i][self.mapping[i].index(var.get())])
+                for i, var in enumerate(self.selected_values)
+            ]
         )
 
         # Execute the query and get the result as a DataFrame
@@ -114,13 +123,19 @@ class DataVisualizationApp:
     def update(self, query_instance):
         # Fetch the query result
         query_instance.set_args(
-            [selected_value.get() for selected_value in self.selected_values]
+            [
+                str(self.values[i][self.mapping[i].index(var.get())])
+                for i, var in enumerate(self.selected_values)
+            ]
         )
+        
 
         # Execute the query and get the result as a DataFrame
         query_instance.execute_query()
+        
 
         self.query_text.delete("1.0", tk.END)
+        
 
         self.query_text.insert(tk.END, query_instance.get_query())
 
@@ -143,11 +158,13 @@ def run_app(query_instance_list):
 
     # Create an instance of DataVisualizationApp for each set of data
     for i, instance_data in enumerate(query_instance_list):
-        # Create an instance of DataVisualizationApp for the current window
+        # Create an
+        #  instance of DataVisualizationApp for the current window
         app = DataVisualizationApp(
             root,
             query_instance=instance_data,
             values=instance_data.config["args"],
+            mapping=instance_data.config["mapping"],
             name="Query {}".format(i + 1),
         )
         tabControl.add(app.main_frame, text=f"Query {i+1}")
@@ -163,11 +180,19 @@ if __name__ == "__main__":
     config_dict = yaml.safe_load(open("config.yaml"))
 
     # Replace 'your_mysql_connection_here' with your actual MySQL connection
+    # mysql_connection = MySQLConnection(
+    #     host="localhost",
+    #     user="CyberTitan",
+    #     password="19216811",
+    #     database="accidentsroutiers",
+    # )
+
     mysql_connection = MySQLConnection(
         host="localhost",
-        user="CyberTitan",
-        password="19216811",
+        user="user4projet",
+        password="Hellogenielogiciel2023",
         database="accidentsroutiers",
+        auth_plugin="mysql_native_password",
     )
 
     queries_texts = []

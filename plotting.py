@@ -1,6 +1,6 @@
 import sys
 from collections import defaultdict
-
+import seaborn as sns  
 import matplotlib
 import matplotlib.pyplot as plt
 import mysql.connector
@@ -13,24 +13,32 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget,
                              QVBoxLayout, QWidget)
 
 matplotlib.use("qt5agg")
-
-# Replace these with your MySQL database credentials
-# DB_CONFIG = {
-#     "host": "localhost",
-#     "user": "user4projet",
-#     "password": "Hellogenielogiciel2023",
-#     "database": "accidentsroutiers",
-#     "auth_plugin": "mysql_native_password",
-# }
-DB_CONFIG = {
-    "host": "localhost",
-    "user": "CyberTitan",
-    "password": "19216811",
-    "database": "accidentsroutiers",
-}
-
 FIG_SIZE = (10, 10)
 
+# Replace these with your MySQL database credentials
+DB_CONFIG = {
+    "host": "localhost",
+    "user": "user4projet",
+    "password": "Hellogenielogiciel2023",
+    "database": "accidentsroutiers",
+    "auth_plugin": "mysql_native_password",
+}
+# DB_CONFIG = {
+#     "host": "localhost",
+#     "user": "CyberTitan",
+#     "password": "19216811",
+#     "database": "accidentsroutiers",
+# }
+
+# Function to connect to the MySQL database
+def connect_to_db():
+    return mysql.connector.connect(**DB_CONFIG)
+
+
+# Function to execute a query and return a DataFrame
+def execute_query(query, connection):
+    df = pd.read_sql_query(query, connection)
+    return df
 
 class PlotWindow:
     def __init__(self, parent=None):
@@ -194,19 +202,6 @@ def plot3d(
     ax.legend(t_categories)
     return fig
 
-
-# Function to connect to the MySQL database
-def connect_to_db():
-    return mysql.connector.connect(**DB_CONFIG)
-
-
-# Function to execute a query and return a DataFrame
-def execute_query(query, connection):
-    df = pd.read_sql_query(query, connection)
-    return df
-
-
-# Tailles de figure globales
 def plot2D(df_query, x, y, z, title, scat, pie):
     figure = None  # Initialiser la variable figure
 
@@ -215,6 +210,8 @@ def plot2D(df_query, x, y, z, title, scat, pie):
         df_query["Severity"] = df_query[z].map(z_mapping)
 
         figure, ax = plt.subplots(figsize=FIG_SIZE)
+
+        # Use Seaborn color palette
         scatter = ax.scatter(
             df_query[x], df_query[y], c=df_query["Severity"], cmap="viridis", s=100
         )
@@ -230,6 +227,9 @@ def plot2D(df_query, x, y, z, title, scat, pie):
         ax.set_title(title)
 
     elif pie:
+        # Use Seaborn color palette
+        sns.set_palette("pastel")
+        
         # Pie chart
         figure, ax = plt.subplots(figsize=FIG_SIZE)
         ax.pie(df_query[y], labels=df_query[x], autopct="%1.1f%%", startangle=140)
@@ -238,6 +238,9 @@ def plot2D(df_query, x, y, z, title, scat, pie):
     elif title == "Manoeuvre Types and Accident Outcomes":
         figure, ax = plt.subplots(figsize=FIG_SIZE)
 
+        # Use Seaborn color palette
+        sns.set_palette("pastel")
+        
         # Bar chart
         bar_width = 0.6
         bar_positions = range(len(df_query["Manoeuvre"]))
@@ -277,6 +280,9 @@ def plot2D(df_query, x, y, z, title, scat, pie):
         ax.legend()
 
     else:
+        # Use Seaborn color palette
+        sns.set_palette("pastel")
+        
         # Bar chart
         figure, ax = plt.subplots(figsize=FIG_SIZE)
         ax.bar(df_query[x], df_query[y])
