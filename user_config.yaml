@@ -1,0 +1,19 @@
+Alhussein:
+  "host" : "localhost"
+  "user" : "CyberTitan"
+  "password" : "19216811"
+  "database" : "accidentsroutiers"
+
+Lynda:
+  "host" : "localhost"
+  "user" : "user4projet"
+  "password" : "Hellogenielogiciel2023"
+  "database" : "accidentsroutiers"
+  "auth_plugin" : "mysql_native_password"
+
+User: 
+  "host" : "localhost"
+  "user" : "root"
+  "password" : "root"
+  "database" : "accidentsroutiers"
+  "auth_plugin" : "mysql_native_password"

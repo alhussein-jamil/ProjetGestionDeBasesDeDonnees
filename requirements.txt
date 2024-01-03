@@ -1,0 +1,14 @@
+black
+isort
+matplotlib
+mysql
+mysql-connector-python
+mysqlclient
+nbformat
+numpy
+pandas
+plotly
+pyaml
+PyQt5
+PyYAML
+seaborn

@@ -9,6 +9,7 @@ from mysql.connector import MySQLConnection
 from plotting import plot_query
 from query import Query
 
+import argparse
 
 class DataVisualizationApp:
     def __init__(self, root, query_instance, values, mapping, name):
@@ -177,22 +178,19 @@ def run_app(query_instance_list):
 
 # Application principale
 if __name__ == "__main__":
-    config_dict = yaml.safe_load(open("config.yaml"))
+    # Parse the command line arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-u", "--user", help="MySQL username", default="User", type=str
+    )
+    user = parser.parse_args().user
+
+    config_dict = yaml.safe_load(open("query_config.yaml"))
+    user_config = yaml.safe_load(open("user_config.yaml"))
 
     # Replace 'your_mysql_connection_here' with your actual MySQL connection
-    # mysql_connection = MySQLConnection(
-    #     host="localhost",
-    #     user="CyberTitan",
-    #     password="19216811",
-    #     database="accidentsroutiers",
-    # )
-
     mysql_connection = MySQLConnection(
-        host="localhost",
-        user="user4projet",
-        password="Hellogenielogiciel2023",
-        database="accidentsroutiers",
-        auth_plugin="mysql_native_password",
+        **user_config[user],
     )
 
     queries_texts = []
