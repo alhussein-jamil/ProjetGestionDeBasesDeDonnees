@@ -13,7 +13,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-u", "--user", help="MySQL username", default="User", type=str)
     parser.add_argument(
-        "-a", "--app", help="Run the App", default=True, action="store_true"
+        "-a", "--app", help="Do not Run the App", default=True, action="store_false"
     )
     parser.add_argument(
         "-p", "--plots", help="Generate plots", default=False, action="store_true"

@@ -37,7 +37,7 @@ python main.py
 ```
 you can use the following arguments:
   - -p : to show the plots only 
-
+  - -a : to not run the application
 
 
 ## *Rapport sur overleaf*:
