@@ -11,11 +11,12 @@ from query import Query
 
 
 class DataVisualizationApp:
-    def __init__(self, root, query_instance, values, name):
+    def __init__(self, root, query_instance, values, mapping, name):
         self.root = root
 
         self.labels = list(values.keys())
         self.values = list(values.values())
+        self.mapping = list(mapping.values())
 
         # Paramètre modifiable
         self.selected_values = [tk.StringVar() for _ in values]
@@ -47,18 +48,36 @@ class DataVisualizationApp:
 
         update_button = ttk.Button(
             param_frame,
-            text="Mettre à jour",
+            text="Update",
             command=lambda: self.update(query_instance),
         )
         update_button.grid(row=len(self.values), column=0, columnspan=2, sticky="w")
 
-        # Frame pour le diagramme à barres
+        # Frame pour le diagramme 
         self.chart_frame = ttk.Frame(main_frame)
         self.chart_frame.grid(row=1, column=0, sticky="nsew")
 
+        # Frame pour l'affichage du mapping
+        mapping_frame = ttk.Frame(main_frame, padding=(10, 10, 10, 10))
+        mapping_frame.grid(row=len(self.values) + 1, column=0, columnspan=2, sticky="nsew")
+
+        # Label pour le titre du mapping
+        mapping_title_label = ttk.Label(mapping_frame, text="Mapping Information:")
+        mapping_title_label.grid(row=0, column=0, sticky="w")
+
+        # Affichage du mapping
+        for i, label in enumerate(self.labels):
+            if i < len(self.mapping):
+                value = self.mapping[i]
+                mapping_label = ttk.Label(mapping_frame, text=f"{label}: {value}")
+                mapping_label.grid(row=i + 1, column=0, sticky="w")
+            else:
+                mapping_label = ttk.Label(mapping_frame, text=f"{label}: No value")
+                mapping_label.grid(row=i + 1, column=0, sticky="w")
+
         # Zone de texte déroulante pour la requête SQL
         self.query_text = scrolledtext.ScrolledText(
-            self.chart_frame, width=50, height=20, wrap=tk.WORD
+            self.chart_frame, width=80, height=30, wrap=tk.WORD
         )
         self.query_text.insert(tk.END, query_instance.get_query())
         self.query_text.grid(row=0, column=0, padx=10, pady=10)
@@ -143,11 +162,13 @@ def run_app(query_instance_list):
 
     # Create an instance of DataVisualizationApp for each set of data
     for i, instance_data in enumerate(query_instance_list):
-        # Create an instance of DataVisualizationApp for the current window
+        # Create an
+        #  instance of DataVisualizationApp for the current window
         app = DataVisualizationApp(
             root,
             query_instance=instance_data,
             values=instance_data.config["args"],
+            mapping=instance_data.config["mapping"],
             name="Query {}".format(i + 1),
         )
         tabControl.add(app.main_frame, text=f"Query {i+1}")
@@ -163,11 +184,19 @@ if __name__ == "__main__":
     config_dict = yaml.safe_load(open("config.yaml"))
 
     # Replace 'your_mysql_connection_here' with your actual MySQL connection
-    mysql_connection = MySQLConnection(
-        host="localhost",
-        user="CyberTitan",
-        password="19216811",
-        database="accidentsroutiers",
+    # mysql_connection = MySQLConnection(
+    #     host="localhost",
+    #     user="CyberTitan",
+    #     password="19216811",
+    #     database="accidentsroutiers",
+    # )
+
+    mysql_connection  = MySQLConnection(
+    host= "localhost",
+    user= "user4projet",
+    password= "Hellogenielogiciel2023",
+    database= "accidentsroutiers",
+    auth_plugin= "mysql_native_password",
     )
 
     queries_texts = []
@@ -185,4 +214,5 @@ if __name__ == "__main__":
                 Query(query_text, config_dict[f"query{i+1}"], mysql_connection)
             )
 
+    
     run_app(query_instance_list)

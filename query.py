@@ -14,6 +14,8 @@ class Query:
         for k, v in self.config["args"].items():
             self.args.append(v)
             self.labels.append(k)
+            
+        self.mapping = self.config.get("mapping", {})  # Added mapping attribute
 
         self.current_args = [arg[0] for arg in self.args]
         self.set_args(self.current_args)

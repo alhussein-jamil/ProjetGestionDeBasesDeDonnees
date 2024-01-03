@@ -31,7 +31,7 @@ JOIN
     conditions_atmospheriques.conditions_atmospheriques
 ORDER BY 
     COUNT(*) DESC
-LIMIT 5;
+LIMIT  $choice$;
 
 -- Query_2D 3: Find the average number of accidents for each category of the road.
 -- title='Average Number of Accidents for Each Road Category'
@@ -46,6 +46,8 @@ FROM (
         lieux
     JOIN
         categorie_de_route ON categorie_de_route.id_categorie_de_route = catr
+    WHERE 
+        situ = $choice$
     GROUP BY
         catr
 ) AS T;
@@ -60,7 +62,8 @@ FROM
 JOIN 
     vehicules ON type_motorisation.id_type_motorisation = vehicules.motor
 GROUP BY 
-    type_motorisation.type_motorisation;
+    type_motorisation.type_motorisation
+LIMIT $choice$;
 
 -- Query_3D 5: Retrieve the distribution of accidents across different categories such as time of day (lum), weather conditions (atm), and road types (catr).
 -- title='Severity of Accidents across lighting conditions, weather conditions and road types'
@@ -83,19 +86,25 @@ JOIN
 JOIN
     infrastructure ON id_infrastructure = infra
 WHERE
-    id_conditions_atmospheriques = $choice$
+    id_categorie_de_route = $choice$
 GROUP BY 
     conditions_atmospheriques, categorie_de_route, lumiere, infrastructure
 ORDER BY 
     accident_count DESC;
 
--- Query_pie2D 6: Analyze the severity of accidents by looking at the number of fatalities, injuries, and the types of vehicles involved.
--- title='Accidents by the number of fatalities, injuries and vehicle Category '
+-- Query_pie2D 6: Analyze the severity of accidents by looking at the number of fatalities, injuries, and the gender involved.
+-- title='Accidents by the number of fatalities, injuries and gender'
 SELECT 
     gravite AS severity,
     COUNT(*) aS severity_count
-FROM gravite 
-JOIN usagers ON grav = id_gravite GROUP BY grav;
+FROM 
+    gravite 
+JOIN 
+    usagers ON grav = id_gravite 
+WHERE
+    usagers.sexe = $choice$
+GROUP BY 
+    grav;
 
 -- Query_pie2D 7: Explore the involvement of different vehicle categories (catv) in accidents and analyze their contribution to overall road safety.
 -- title='Accidents by Vehicle Category'
@@ -108,7 +117,7 @@ JOIN
     categorie_du_vehicule ON categorie_du_vehicule.id_categorie_du_vehicule = catv
 GROUP BY 
     categorie_du_vehicule
-Limit 10;
+Limit $choice$;
 
 -- Query_2D 8: Examine the types of collisions (col) that occur most frequently. Determine if certain collision types are associated with higher injury rates.
 -- title='Most Frequent Collision Types'
@@ -119,10 +128,12 @@ FROM
     caracteristiques
 JOIN
     collision ON collision.id_collision = col
+WHERE
+    atm = $choice$ 
 GROUP BY
     collision;
 
--- Query_2D 9: Analyze the age and gender (sexe) distribution of individuals involved in accidents and determine if there are age or gender-specific patterns. Safety Equipment Usage:
+-- Query_2D 9: Analyze the gender (sexe) distribution of individuals involved in accidents and their safety Equipment Usage:
 -- title='Average Equipment Use Score by Gender'
 SELECT 
     sexe.sexe as 'Gender',
@@ -133,6 +144,7 @@ JOIN
     sexe ON sexe.id_sexe = usagers.sexe
 WHERE 
     usagers.secu1 NOT IN ('-1', '0', '8', '9') AND usagers.secu2 NOT IN ('-1', '0', '8', '9') AND  usagers.secu3 NOT IN ('-1', '0', '8', '9') 
+    AND usagers.grav = $choice$
 GROUP BY 
     sexe.sexe;
 
@@ -155,7 +167,7 @@ JOIN
 JOIN 
     gravite ON gravite.id_gravite = u.grav
 WHERE
-    u.catu = 1
+    u.catu = 1 and secu3.id_secu3 = $choice$
 GROUP BY
     u.secu1, u.secu2, u.secu3, u.grav;
 
@@ -172,7 +184,7 @@ JOIN
 JOIN 
     action_du_pieton ON  id_action_du_pieton = actp
 WHERE
-    u.catu = 3 
+    u.catu = 3 AND u.grav = $choice$
 GROUP BY
     u.locp, u.actp;
 
@@ -190,5 +202,7 @@ JOIN
     Usagers u ON v.Num_Acc = u.Num_Acc AND v.num_veh = u.num_veh
 JOIN 
     manoeuvre_principale_avant_accident_ m ON id_manoeuvre_principale_avant_accident_ = manv 
+WHERE
+    u.catu = $choice$
 GROUP BY
     v.manv;

@@ -123,7 +123,7 @@ JOIN
 GROUP BY
     collision;
 
--- Query_2D 9: Analyze the age and gender (sexe) distribution of individuals involved in accidents and determine if there are age or gender-specific patterns. Safety Equipment Usage:
+-- Query_2D 9: Analyze the gender (sexe) distribution of individuals involved in accidents and their safety Equipment Usage:
 -- title='Average Equipment Use Score by Gender'
 SELECT 
     sexe.sexe as 'Gender',

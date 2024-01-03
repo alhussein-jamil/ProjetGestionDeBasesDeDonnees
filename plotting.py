@@ -5,12 +5,9 @@ import matplotlib
 import matplotlib.pyplot as plt
 import mysql.connector
 import pandas as pd
-from matplotlib.backends.backend_qt5agg import \
-    FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt5agg import \
-    NavigationToolbar2QT as NavigationToolbar
-from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget,
-                             QVBoxLayout, QWidget)
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTabWidget, QVBoxLayout, QWidget
 
 matplotlib.use("qt5agg")
 
