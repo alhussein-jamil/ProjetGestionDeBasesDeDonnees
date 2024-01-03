@@ -1,17 +1,17 @@
-from src.data_visualization import  run_app
-from src.query import Query
 import argparse
+
 import yaml
 from mysql.connector import MySQLConnection
+
+from src.data_visualization import run_app
 from src.plotting import plot
+from src.query import Query
 
 # Application principale
 if __name__ == "__main__":
     # Parse the command line arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-u", "--user", help="MySQL username", default="User", type=str
-    )
+    parser.add_argument("-u", "--user", help="MySQL username", default="User", type=str)
     parser.add_argument(
         "-a", "--app", help="Run the App", default=True, action="store_true"
     )
@@ -44,9 +44,8 @@ if __name__ == "__main__":
             query_instance_list.append(
                 Query(query_text, config_dict[f"query{i+1}"], mysql_connection)
             )
-
-    if args.app:
-        run_app(query_instance_list)
-
     if args.plots:
         plot(connection=mysql_connection)
+    else:
+        if args.app:
+            run_app(query_instance_list)

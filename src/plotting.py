@@ -1,10 +1,11 @@
 import sys
 from collections import defaultdict
-import seaborn as sns  
+
 import matplotlib
 import matplotlib.pyplot as plt
 import mysql.connector
 import pandas as pd
+import seaborn as sns
 from matplotlib.backends.backend_qt5agg import \
     FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import \
@@ -25,6 +26,7 @@ def connect_to_db():
 def execute_query(query, connection):
     df = pd.read_sql_query(query, connection)
     return df
+
 
 class PlotWindow:
     def __init__(self, parent=None):
@@ -188,6 +190,7 @@ def plot3d(
     ax.legend(t_categories)
     return fig
 
+
 def plot2D(df_query, x, y, z, title, scat, pie):
     figure = None  # Initialiser la variable figure
 
@@ -215,7 +218,7 @@ def plot2D(df_query, x, y, z, title, scat, pie):
     elif pie:
         # Use Seaborn color palette
         sns.set_palette("pastel")
-        
+
         # Pie chart
         figure, ax = plt.subplots(figsize=FIG_SIZE)
         ax.pie(df_query[y], labels=df_query[x], autopct="%1.1f%%", startangle=140)
@@ -226,7 +229,7 @@ def plot2D(df_query, x, y, z, title, scat, pie):
 
         # Use Seaborn color palette
         sns.set_palette("pastel")
-        
+
         # Bar chart
         bar_width = 0.6
         bar_positions = range(len(df_query["Manoeuvre"]))
@@ -268,7 +271,7 @@ def plot2D(df_query, x, y, z, title, scat, pie):
     else:
         # Use Seaborn color palette
         sns.set_palette("pastel")
-        
+
         # Bar chart
         figure, ax = plt.subplots(figsize=FIG_SIZE)
         ax.bar(df_query[x], df_query[y])

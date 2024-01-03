@@ -42,7 +42,7 @@ class DataVisualizationApp:
                 param_frame,
                 values=self.mapping[i],
                 textvariable=self.selected_values[i],
-                style='TCombobox',  # This style is added for increased font size
+                style="TCombobox",  # This style is added for increased font size
             )
             value_combobox.grid(row=i, column=1, sticky="w")
 
@@ -56,7 +56,6 @@ class DataVisualizationApp:
         # Frame pour le diagramme
         self.chart_frame = ttk.Frame(main_frame)
         self.chart_frame.grid(row=1, column=0, sticky="nsew")
-
 
         # Zone de texte déroulante pour la requête SQL
         self.query_text = scrolledtext.ScrolledText(
@@ -124,14 +123,11 @@ class DataVisualizationApp:
                 for i, var in enumerate(self.selected_values)
             ]
         )
-        
 
         # Execute the query and get the result as a DataFrame
         query_instance.execute_query()
-        
 
         self.query_text.delete("1.0", tk.END)
-        
 
         self.query_text.insert(tk.END, query_instance.get_query())
 
@@ -169,5 +165,3 @@ def run_app(query_instance_list):
 
     # Start the main loop
     root.mainloop()
-
-

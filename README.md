@@ -1,16 +1,49 @@
 # ProjetGestionDeBasesDeDonnees
 Projet Genie Logiciel 
 
-
-
 ## *Dataset* : 
+  (No need to download it, it is already in the project)
   Bases de donnees annuelles des accidents corporels de la circulation routiere annees de 2005 a 2022
   https://www.data.gouv.fr/fr/datasets/bases-de-donnees-annuelles-des-accidents-corporels-de-la-circulation-routiere-annees-de-2005-a-2022/
   
+## *requirements*:
+- python >= 3.10.11
+install python : https://www.python.org/downloads/
+
+## *Prepare Database*:
+We use mysql database, we provide the .sql script to create the database and tables.
+- create a database named "accidentsroutiers": 
+```bash
+mysql -u root -p
+CREATE DATABASE accidentsroutiers;
+```
+- create tables and populate them:
+```bash
+mysql -u root -p accidentsroutiers < accidentsroutiers.sql
+```
+- create a user named "some_user_name" with password "some_password" and grant him all privileges on the database "accidentsroutiers".
+- change the config file config/user_config.py 
+
+## *Installation*:
+- create a virtual environment using venv, pyenv or conda
+- install requirements.txt
+```bash
+pip install --upgrade -r requirements.txt
+```
+
+## *Run*:
+```bash
+python main.py 
+```
+you can use the following arguments:
+  - -p : to show the plots only 
+
+
+
 ## *Rapport sur overleaf*:
   https://www.overleaf.com/project/6567c4d2836490c0cd1b981b
   
-# *Instructions* :
+## *Project Instructions* :
 ### Avancez au maximum sur ces points :
 - Une description de votre projet, précisant bien les besoins auxquels elle va répondre.
 - Le modèle Entité-Association de votre projet.
