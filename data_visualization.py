@@ -20,7 +20,7 @@ class DataVisualizationApp:
 
         # Paramètre modifiable
         self.selected_values = [tk.StringVar() for _ in values]
-        for i, val in enumerate(self.values):
+        for i, val in enumerate(self.mapping):
             self.selected_values[i].set(val[0])
         self.chart_frame = None
 
@@ -37,12 +37,16 @@ class DataVisualizationApp:
         param_frame = ttk.Frame(main_frame, padding=(10, 10, 10, 10))
         param_frame.grid(row=0, column=0, sticky="nsew")
 
-        for i in range(len(self.values)):
+        for i in range(len(self.mapping)):
             label = ttk.Label(param_frame, text=f"{self.labels[i]}:")
             label.grid(row=i, column=0, sticky="w")
 
+            # Increase the font size in the Combobox
             value_combobox = ttk.Combobox(
-                param_frame, values=self.values[i], textvariable=self.selected_values[i]
+                param_frame,
+                values=self.mapping[i],
+                textvariable=self.selected_values[i],
+                style='TCombobox',  # This style is added for increased font size
             )
             value_combobox.grid(row=i, column=1, sticky="w")
 
@@ -51,29 +55,12 @@ class DataVisualizationApp:
             text="Update",
             command=lambda: self.update(query_instance),
         )
-        update_button.grid(row=len(self.values), column=0, columnspan=2, sticky="w")
+        update_button.grid(row=len(self.mapping), column=0, columnspan=2, sticky="w")
 
-        # Frame pour le diagramme 
+        # Frame pour le diagramme
         self.chart_frame = ttk.Frame(main_frame)
         self.chart_frame.grid(row=1, column=0, sticky="nsew")
 
-        # Frame pour l'affichage du mapping
-        mapping_frame = ttk.Frame(main_frame, padding=(10, 10, 10, 10))
-        mapping_frame.grid(row=len(self.values) + 1, column=0, columnspan=2, sticky="nsew")
-
-        # Label pour le titre du mapping
-        mapping_title_label = ttk.Label(mapping_frame, text="Mapping Information:")
-        mapping_title_label.grid(row=0, column=0, sticky="w")
-
-        # Affichage du mapping
-        for i, label in enumerate(self.labels):
-            if i < len(self.mapping):
-                value = self.mapping[i]
-                mapping_label = ttk.Label(mapping_frame, text=f"{label}: {value}")
-                mapping_label.grid(row=i + 1, column=0, sticky="w")
-            else:
-                mapping_label = ttk.Label(mapping_frame, text=f"{label}: No value")
-                mapping_label.grid(row=i + 1, column=0, sticky="w")
 
         # Zone de texte déroulante pour la requête SQL
         self.query_text = scrolledtext.ScrolledText(
@@ -100,7 +87,10 @@ class DataVisualizationApp:
     def create_plotting(self, query_instance):
         # Fetch the query result
         query_instance.set_args(
-            [selected_value.get() for selected_value in self.selected_values]
+            [
+                str(self.values[i][self.mapping[i].index(var.get())])
+                for i, var in enumerate(self.selected_values)
+            ]
         )
 
         # Execute the query and get the result as a DataFrame
@@ -133,13 +123,19 @@ class DataVisualizationApp:
     def update(self, query_instance):
         # Fetch the query result
         query_instance.set_args(
-            [selected_value.get() for selected_value in self.selected_values]
+            [
+                str(self.values[i][self.mapping[i].index(var.get())])
+                for i, var in enumerate(self.selected_values)
+            ]
         )
+        
 
         # Execute the query and get the result as a DataFrame
         query_instance.execute_query()
+        
 
         self.query_text.delete("1.0", tk.END)
+        
 
         self.query_text.insert(tk.END, query_instance.get_query())
 
@@ -191,12 +187,12 @@ if __name__ == "__main__":
     #     database="accidentsroutiers",
     # )
 
-    mysql_connection  = MySQLConnection(
-    host= "localhost",
-    user= "user4projet",
-    password= "Hellogenielogiciel2023",
-    database= "accidentsroutiers",
-    auth_plugin= "mysql_native_password",
+    mysql_connection = MySQLConnection(
+        host="localhost",
+        user="user4projet",
+        password="Hellogenielogiciel2023",
+        database="accidentsroutiers",
+        auth_plugin="mysql_native_password",
     )
 
     queries_texts = []
@@ -214,5 +210,4 @@ if __name__ == "__main__":
                 Query(query_text, config_dict[f"query{i+1}"], mysql_connection)
             )
 
-    
     run_app(query_instance_list)

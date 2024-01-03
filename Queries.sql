@@ -6,7 +6,6 @@ SELECT
     caracteristiques.mois AS 'Month',
     categorie_du_vehicule.categorie_du_vehicule AS 'Vehicle Category',
     gravite.gravite AS 'Severity'
-    
 FROM
     usagers
         JOIN
@@ -44,7 +43,7 @@ SELECT
 FROM (
     SELECT
         categorie_de_route.categorie_de_route AS cat,
-        COUNT(*) AS c_acc
+        COUNT(*) AS c_acc 
     FROM
         lieux
     JOIN
@@ -63,7 +62,9 @@ FROM
 JOIN 
     vehicules ON type_motorisation.id_type_motorisation = vehicules.motor
 GROUP BY 
-    type_motorisation.type_motorisation;
+    type_motorisation.type_motorisation
+ORDER BY 
+    COUNT(*) DESC;
 
 -- Query_3D 5: Retrieve the distribution of accidents across different categories such as time of day (lum), weather conditions (atm), and road types (catr).
 -- title='Severity of Accidents across lighting conditions, weather conditions and road types'
@@ -90,13 +91,19 @@ GROUP BY
 ORDER BY 
     accident_count DESC;
 
--- Query_pie2D 6: Analyze the severity of accidents by looking at the number of fatalities, injuries, and the types of vehicles involved.
--- title='Accidents by the number of fatalities, injuries and vehicle Category '
+-- Query_pie2D 6: Analyze the severity of accidents by looking at the number of fatalities and injuries.
+-- title='Accidents by the number of fatalities and injuries'
 SELECT 
     gravite AS severity,
     COUNT(*) aS severity_count
-FROM gravite 
-JOIN usagers ON grav = id_gravite GROUP BY grav;
+FROM 
+    gravite 
+JOIN 
+    usagers ON grav = id_gravite 
+GROUP BY 
+    grav
+ORDER BY 
+    COUNT(*) DESC;
 
 -- Query_pie2D 7: Explore the involvement of different vehicle categories (catv) in accidents and analyze their contribution to overall road safety.
 -- title='Accidents by Vehicle Category'
@@ -109,6 +116,8 @@ JOIN
     categorie_du_vehicule ON categorie_du_vehicule.id_categorie_du_vehicule = catv
 GROUP BY 
     categorie_du_vehicule
+ORDER BY 
+    COUNT(*) DESC
 Limit 10;
 
 -- Query_2D 8: Examine the types of collisions (col) that occur most frequently. Determine if certain collision types are associated with higher injury rates.
@@ -121,7 +130,9 @@ FROM
 JOIN
     collision ON collision.id_collision = col
 GROUP BY
-    collision;
+    collision
+ORDER BY 
+    COUNT(*) DESC;
 
 -- Query_2D 9: Analyze the gender (sexe) distribution of individuals involved in accidents and their safety Equipment Usage:
 -- title='Average Equipment Use Score by Gender'
@@ -175,7 +186,9 @@ JOIN
 WHERE
     u.catu = 3 
 GROUP BY
-    u.locp, u.actp;
+    u.locp, u.actp
+ORDER BY 
+    COUNT(*) DESC;
 
 -- Query_2D 12: Investigate the types of manoeuvres performed by vehicles before accidents and their impact on collision outcomes.
 -- title='Manoeuvre Types and Accident Outcomes'
@@ -192,4 +205,6 @@ JOIN
 JOIN 
     manoeuvre_principale_avant_accident_ m ON id_manoeuvre_principale_avant_accident_ = manv 
 GROUP BY
-    v.manv;
+    v.manv
+ORDER BY 
+    COUNT(*) DESC;

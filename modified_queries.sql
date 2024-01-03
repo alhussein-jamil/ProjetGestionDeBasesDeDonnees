@@ -63,6 +63,8 @@ JOIN
     vehicules ON type_motorisation.id_type_motorisation = vehicules.motor
 GROUP BY 
     type_motorisation.type_motorisation
+ORDER BY 
+    COUNT(*) DESC
 LIMIT $choice$;
 
 -- Query_3D 5: Retrieve the distribution of accidents across different categories such as time of day (lum), weather conditions (atm), and road types (catr).
@@ -104,7 +106,9 @@ JOIN
 WHERE
     usagers.sexe = $choice$
 GROUP BY 
-    grav;
+    grav
+ORDER BY 
+    COUNT(*) DESC;
 
 -- Query_pie2D 7: Explore the involvement of different vehicle categories (catv) in accidents and analyze their contribution to overall road safety.
 -- title='Accidents by Vehicle Category'
@@ -117,6 +121,8 @@ JOIN
     categorie_du_vehicule ON categorie_du_vehicule.id_categorie_du_vehicule = catv
 GROUP BY 
     categorie_du_vehicule
+ORDER BY 
+    COUNT(*) DESC
 Limit $choice$;
 
 -- Query_2D 8: Examine the types of collisions (col) that occur most frequently. Determine if certain collision types are associated with higher injury rates.
@@ -131,7 +137,9 @@ JOIN
 WHERE
     atm = $choice$ 
 GROUP BY
-    collision;
+    collision
+ORDER BY 
+    COUNT(*) DESC;
 
 -- Query_2D 9: Analyze the gender (sexe) distribution of individuals involved in accidents and their safety Equipment Usage:
 -- title='Average Equipment Use Score by Gender'
@@ -186,7 +194,9 @@ JOIN
 WHERE
     u.catu = 3 AND u.grav = $choice$
 GROUP BY
-    u.locp, u.actp;
+    u.locp, u.actp
+ORDER BY 
+    COUNT(*) DESC;
 
 -- Query_2D 12: Investigate the types of manoeuvres performed by vehicles before accidents and their impact on collision outcomes.
 -- title='Manoeuvre Types and Accident Outcomes'
@@ -205,4 +215,6 @@ JOIN
 WHERE
     u.catu = $choice$
 GROUP BY
-    v.manv;
+    v.manv
+ORDER BY 
+    COUNT(*) DESC;
