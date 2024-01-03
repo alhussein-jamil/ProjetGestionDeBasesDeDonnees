@@ -1,3 +1,4 @@
 *.ipynb
 /_pycache_/
 *cpython*
+*.pyc
