@@ -1,9 +1,0 @@
-id_obstacle_mobile_heurte;obstacle_mobile_heurte
--1;Non renseigné
-0;Aucun
-1;Piéton
-2;Véhicule
-4;Véhicule sur rail
-5;Animal domestique
-6;Animal sauvage
-9;Autre
