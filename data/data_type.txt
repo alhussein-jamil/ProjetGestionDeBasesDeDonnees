@@ -1,0 +1,72 @@
+- Table: caracteristiques  | nb row = 55298 (55302 real rows)
+-------------------------------------------------------------
+Accident_Id varchar(255) PK 
+jour bigint 
+mois bigint 
+an bigint 
+hrmn time 
+lum varchar(255) 
+dep text 
+com text 
+agg varchar(255) 
+int varchar(255) 
+atm varchar(255) 
+col varchar(255) 
+adr text 
+lat decimal(30,25) 
+long decimal(30,2)
+
+- Table: lieux   | nb row = 55269 (55302 real rows)
+---------------------------------------------------
+Num_Acc varchar(255) PK 
+catr varchar(255) 
+voie text 
+v1 text 
+v2 text 
+circ varchar(255) 
+nbv int 
+vosp varchar(255) 
+prof varchar(255) 
+pr text 
+pr1 text 
+plan varchar(255) 
+lartpc text 
+larrout double 
+surf varchar(255) 
+infra varchar(255) 
+situ varchar(255) 
+vma int
+
+
+- Table: usagers | nb row = 123391 (126662 real rows)
+-----------------------------------------------------
+Num_Acc varchar(255) 
+id_usager varchar(255) PK 
+id_vehicule varchar(255) 
+num_veh text 
+place int 
+catu varchar(255) 
+grav varchar(255) 
+sexe varchar(255) 
+n_nis year 
+trajet varchar(255) 
+secu1 varchar(255) 
+secu2 varchar(255) 
+secu3 varchar(255) 
+locp varchar(255) 
+actp varchar(255) 
+etatp varchar(255)
+
+- Table: vehicules | nb row = 94493 (94493 real rows)
+-----------------------------------------------------
+Num_Acc varchar(255) 
+id_vehicule varchar(255) PK 
+num_veh text 
+senc varchar(255) 
+catv varchar(255) 
+obs varchar(255) 
+obsm varchar(255) 
+choc varchar(255) 
+manv varchar(255) 
+motor varchar(255) 
+occutc text
