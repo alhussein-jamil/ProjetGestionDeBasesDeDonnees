@@ -16,12 +16,6 @@ from PyQt5.QtWidgets import (QApplication, QMainWindow, QTabWidget,
 matplotlib.use("qt5agg")
 FIG_SIZE = (10, 10)
 
-
-# Function to connect to the MySQL database
-def connect_to_db():
-    return mysql.connector.connect(**DB_CONFIG)
-
-
 # Function to execute a query and return a DataFrame
 def execute_query(query, connection):
     df = pd.read_sql_query(query, connection)
