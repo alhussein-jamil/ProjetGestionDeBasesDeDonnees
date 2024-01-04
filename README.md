@@ -29,7 +29,7 @@ CREATE DATABASE accidentsroutiers;
 mysql -u root -p accidentsroutiers < accidentsroutiers.sql
 ```
 - create a user named "some_user_name" with password "some_password" and grant him all privileges on the database "accidentsroutiers".
-- change the config file config/user_config.py 
+- change the config file config/user_config.yaml with the user name and password you created.
 
 ## *Installation*:
 - create a virtual environment using venv, pyenv or conda
