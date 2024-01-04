@@ -5,8 +5,15 @@ Projet Genie Logiciel
   (No need to download it, it is already in the project)
   Bases de donnees annuelles des accidents corporels de la circulation routiere annees de 2005 a 2022
   https://www.data.gouv.fr/fr/datasets/bases-de-donnees-annuelles-des-accidents-corporels-de-la-circulation-routiere-annees-de-2005-a-2022/
-  
-## *requirements*:
+
+## *Project Structure*:
+- *config* : contains the config files
+- *data* : contains the data files
+- *schemas* : contains the generated schemas of the database, this includes the MCD(Modele Conceptuel de Donnees) and the MLD(Modele Logique de Donnees). 
+- *src* : contains the source code of the project
+
+
+## *Requirements*:
 - python >= 3.10.11
 install python : https://www.python.org/downloads/
 
