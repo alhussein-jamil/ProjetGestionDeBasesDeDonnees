@@ -1,6 +1,4 @@
-# ProjetGestionDeBasesDeDonnees
-Projet Genie Logiciel 
-
+# Projet Gestion De Bases De Donnees
 ## *Dataset* : 
   (No need to download it, it is already in the project)
   Bases de donnees annuelles des accidents corporels de la circulation routiere annees de 2005 a 2022
