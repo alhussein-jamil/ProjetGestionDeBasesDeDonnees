@@ -25,7 +25,6 @@ if __name__ == "__main__":
     config_dict = yaml.safe_load(open("config/query_config.yaml"))
     user_config = yaml.safe_load(open("config/user_config.yaml"))
 
-    # Replace 'your_mysql_connection_here' with your actual MySQL connection
     mysql_connection = MySQLConnection(
         **user_config[user],
     )
